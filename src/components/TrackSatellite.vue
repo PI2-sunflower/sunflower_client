@@ -104,7 +104,9 @@ export default {
 
     async startTracking() {
       try {
-        let response = await fetch(`http://127.0.0.1:8000/track/${this.NORAD}`);
+        let response = await fetch(
+          `http://127.0.0.1:8000/api/track/${this.NORAD}`
+        );
         let data = await response.json();
 
         return data;
@@ -115,7 +117,7 @@ export default {
     },
 
     async stopTracking() {
-      const stoped = await fetch(`http://127.0.0.1:8000/stop-track`);
+      const stoped = await fetch(`http://127.0.0.1:8000/api/stop-track`);
       return stoped;
     },
 
@@ -125,14 +127,15 @@ export default {
       }
 
       try {
-        let response = await fetch(`http://127.0.0.1:8000/get-satellite-data`);
+        let response = await fetch(`http://127.0.0.1:8000/api/track-data`);
         let data = await response.json();
 
         this.satid = data.satid;
-        this.satname = data.satname;
-        this.satlatitude = data.satlatitude;
-        this.satlongitude = data.satlongitude;
-        this.sataltitude = data.sataltitude;
+        this.satname = data.info.satname;
+        this.satlatitude = data.positions[0].satlatitude;
+        this.satlongitude = data.positions[0].satlongitude;
+        this.sataltitude = data.positions[0].sataltitude;
+        this.errDisplay = "";
       } catch (err) {
         this.errDisplay = "Could not get satellite data";
       }
