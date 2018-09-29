@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { getMap, getMarker } from "../services/track-map";
+
 export default {
   name: "home",
 
@@ -29,33 +31,11 @@ export default {
 
   methods: {
     initMap() {
-      let map = L.map("map-tracker");
-      let satIcon = L.icon({
-        iconUrl: "/images/sate-1.png",
-        iconSize: [60, 60]
-      });
-
       let lat = -15.77972;
       let long = -47.92972;
 
-      map.setView([lat, long], 3);
-
-      let marker = L.marker([lat, long], { icon: satIcon });
-      marker.addTo(map);
-
-      const URI =
-        "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
-
-      L.tileLayer(URI, {
-        maxZoom: 18,
-        attribution: `
-                  Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>
-                  contributors, 
-                    <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>,
-                  Imagery © <a href="https://www.mapbox.com/">Mapbox</a>
-                `,
-        id: "mapbox.streets"
-      }).addTo(map);
+      const map = getMap("map-tracker", lat, long);
+      const marker = getMarker(map, lat, long);
     }
   }
 };
