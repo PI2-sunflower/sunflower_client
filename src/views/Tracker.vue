@@ -1,66 +1,48 @@
 <template>
-  <div id="main-container" class="container">
-    <div id="controls" class="row">
-      <div class="col col-12">
-        <ul class="nav nav-pills">
-          <li class="nav-item">
-            <span class="nav-link disabled">Modo: </span>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Rastreador</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Fixo</a>
-          </li>
-        </ul>
-
-        <hr />
-
-        <div class="row">
-          <div class="col col-6">
-            <div id="tracker-form">
-              <div class="form-group">
-                <label for="satNORD">Código NORD</label>
-                <input
+  <div class="col col-12">
+    <div class="row">
+      <div class="col col-6">
+        <div id="tracker-form">
+          <div class="form-group">
+            <label for="satNORD">Código NORD</label>
+            <input
               type="text"
               class="form-control"
               id="satNORD"
               aria-describedby="satNORD"
               placeholder="000000" v-model="NORD">
-                <small id="satNORDHelp" class="form-text text-muted">
-                  Não sabe o código NORD ?
-                  <a href="https://www.n2yo.com/database/" target="BLANK">Clique aqui</a>
-                </small>
-              </div><!-- /form-group -->
+            <small id="satNORDHelp" class="form-text text-muted">
+              Não sabe o código NORD ?
+              <a href="https://www.n2yo.com/database/" target="BLANK">Clique aqui</a>
+            </small>
+          </div><!-- /form-group -->
 
-              <button v-if="isTracking === false" class="btn btn-primary" @click="setTracking(true)">Rastrear</button>
-              <button v-if="isTracking === true" class="btn btn-danger" @click="setTracking(false)">Parar rastreamento</button>
-            </div><!-- /#tracker-form -->
-          </div><!-- /col-6 -->
+          <button v-if="isTracking === false" class="btn btn-primary" @click="setTracking(true)">Rastrear</button>
+          <button v-if="isTracking === true" class="btn btn-danger" @click="setTracking(false)">Parar rastreamento</button>
+        </div><!-- /#tracker-form -->
+      </div><!-- /col-6 -->
 
-          <div class="col col-6">
-            <table class="table table-striped">
-              <tbody>
-                <tr>
-                  <td>Name:</td>
-                  <td>{{current.satname}}</td>
-                </tr>
-                <tr>
-                  <td>Latidude:</td>
-                  <td>{{current.satlatitude}}</td>
-                </tr>
-                <tr>
-                  <td>Longitude:</td>
-                  <td>{{current.satlongitude}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div><!-- /col-6 -->
-        </div><!-- /row -->
-      </div><!-- /col-12 -->
+      <div class="col col-6">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <td>Name:</td>
+              <td>{{current.satname}}</td>
+            </tr>
+            <tr>
+              <td>Latidude:</td>
+              <td>{{current.satlatitude}}</td>
+            </tr>
+            <tr>
+              <td>Longitude:</td>
+              <td>{{current.satlongitude}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div><!-- /col-6 -->
     </div><!-- /row -->
 
-    <div id="views" class="row">
+    <div class="row">
       <div id="cam-container" class="col col-6">
         Video da câmera
       </div><!-- /col-6 -->
@@ -69,7 +51,7 @@
         <div id="map-tracker"></div>
       </div><!-- /col-6 -->
     </div><!-- /row -->
-  </div><!-- /container -->
+  </div><!-- /col-12 -->
 </template>
 
 <script>
@@ -88,7 +70,7 @@ const MapData = {
 window.MapData = MapData;
 
 export default {
-  name: "home",
+  name: "Tracker",
 
   components: {},
 
@@ -210,23 +192,15 @@ export default {
 </script>
 
 <style>
-#main-container {
-  margin-top: 10px;
-}
-
-#controls {
-}
-
-#views {
+#cam-container {
+  background-color: gray;
   height: 300px;
 }
 
-#cam-container {
-  background-color: gray;
-}
 #map-container {
-  background-color: blue;
+  height: 300px;
 }
+
 #map-tracker {
   background-color: yellow;
   width: 100%;
