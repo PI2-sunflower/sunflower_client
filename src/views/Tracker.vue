@@ -18,7 +18,11 @@
           </div><!-- /form-group -->
 
           <button v-if="isTracking === false" class="btn btn-primary" @click="setTracking(true)">Rastrear</button>
-          <button v-if="isTracking === true" class="btn btn-danger" @click="setTracking(false)">Parar rastreamento</button>
+
+          <button v-if="isTracking === true" :class="'btn btn-' + (current.satname ? 'danger' : 'warning')" @click="setTracking(false)">Parar rastreamento</button>
+
+          <img src="/images/spinner.gif" class="loading-spinner" v-if="isTracking && !current.satname" />
+
         </div><!-- /#tracker-form -->
       </div><!-- /col-6 -->
 
@@ -115,6 +119,7 @@ export default {
 
     async stopTrack() {
       await axios.get("/stop-track");
+      this.current = {};
     },
 
     initMap() {
@@ -170,10 +175,11 @@ export default {
         let position = self.track.positions[curPosition++];
         let { satlatitude, satlongitude } = position;
 
-        self.current = position;
-        self.current.satname = self.track.info.satname;
-
-        MapData.marker.setLatLng([satlatitude, satlongitude]);
+        if (self.isTracking) {
+          self.current = position;
+          self.current.satname = self.track.info.satname;
+          MapData.marker.setLatLng([satlatitude, satlongitude]);
+        }
 
         if (curPosition < 60 && self.isTracking) {
           window.setTimeout(tracker, 1000);
@@ -190,6 +196,11 @@ export default {
 </script>
 
 <style>
+.loading-spinner {
+  width: 40px;
+  margin-left: 10px;
+}
+
 #cam-container {
   background-color: gray;
   height: 300px;
