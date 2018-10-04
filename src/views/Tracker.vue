@@ -55,16 +55,13 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { getMap, getMarker } from "../services/track-map";
 import axios from "../services/axios-setup";
 
 const MapData = {
   map: null,
-  marker: null,
-  from: null,
-  to: null,
-  positions: [],
-  info: null
+  marker: null
 };
 
 window.MapData = MapData;
@@ -82,6 +79,10 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState(["track"])
+  },
+
   watch: {
     NORD() {
       if (this.isTracking) {
@@ -92,7 +93,6 @@ export default {
 
   mounted() {
     this.initMap();
-    // this.getPositions();
   },
 
   methods: {
@@ -111,12 +111,10 @@ export default {
       const nord = this.NORD;
       await axios.get(`/track/${nord}`);
       this.getPositions();
-      alert("Track started");
     },
 
     async stopTrack() {
       await axios.get("/stop-track");
-      alert("Track stoped");
     },
 
     initMap() {
@@ -135,10 +133,12 @@ export default {
       if (data.positions) {
         let { from, to } = data.positions_validation;
 
-        MapData.from = new Date(from);
-        MapData.to = new Date(to);
-        MapData.positions = data.positions;
-        MapData.info = data.info;
+        this.$store.dispatch("setTrackData", {
+          from: new Date(from),
+          to: new Date(to),
+          positions: data.positions,
+          info: data.info
+        });
 
         console.log("GO marker");
 
@@ -152,8 +152,7 @@ export default {
     },
 
     setMarker() {
-      let curPosition = 0;
-      let { satlatitude, satlongitude } = MapData.positions[0];
+      let { satlatitude, satlongitude } = this.track.positions[0];
 
       if (MapData.marker === null) {
         const marker = getMarker(MapData.map, satlatitude, satlongitude);
@@ -165,19 +164,18 @@ export default {
       MapData.map.setView([satlatitude, satlongitude], 3);
 
       let self = this;
+      let curPosition = 0;
 
       function tracker() {
-        let position = MapData.positions[curPosition++];
+        let position = self.track.positions[curPosition++];
         let { satlatitude, satlongitude } = position;
 
         self.current = position;
-        self.current.satname = MapData.info.satname;
+        self.current.satname = self.track.info.satname;
 
         MapData.marker.setLatLng([satlatitude, satlongitude]);
 
-        MapData.from.setSeconds(MapData.from.getSeconds() + 1);
-
-        if (MapData.from < MapData.to && self.isTracking) {
+        if (curPosition < 60 && self.isTracking) {
           window.setTimeout(tracker, 1000);
         } else {
           MapData.marker.remove();
