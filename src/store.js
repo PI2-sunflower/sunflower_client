@@ -13,18 +13,30 @@ export default new Vuex.Store({
       to: null,
       positions: [],
       info: null
+    },
+
+    control: {
+      history: []
     }
   },
 
   mutations: {
     setTrackData(state, track) {
       state.track = track;
+    },
+
+    addControlCommand(state, { angle, axis }) {
+      state.control.history.push({ angle, axis });
     }
   },
 
   actions: {
     setTrackData(context, track) {
       context.commit("setTrackData", track);
+    },
+
+    addControlCommand(context, { angle, axis }) {
+      context.commit("addControlCommand", { angle, axis });
     }
   }
 });
