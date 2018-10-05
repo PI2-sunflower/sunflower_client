@@ -5,12 +5,7 @@
         <div id="tracker-form">
           <div class="form-group">
             <label for="satNORD">Código NORD</label>
-            <input
-              type="text"
-              class="form-control"
-              id="satNORD"
-              aria-describedby="satNORD"
-              placeholder="000000" v-model="NORD">
+            <input type="text" class="form-control" id="satNORD" aria-describedby="satNORD" placeholder="000000" v-model="NORD">
             <small id="satNORDHelp" class="form-text text-muted">
               Não sabe o código NORD ?
               <a href="https://www.n2yo.com/database/" target="BLANK">Clique aqui</a>
@@ -99,6 +94,11 @@ export default {
     this.initMap();
   },
 
+  destroyed() {
+    this.resetMapData();
+    this.stopTrack();
+  },
+
   methods: {
     setTracking(value) {
       if (typeof value !== "boolean") throw new Error("Value must be boolean");
@@ -120,6 +120,11 @@ export default {
     async stopTrack() {
       await axios.get("/stop-track");
       this.current = {};
+    },
+
+    resetMapData() {
+      MapData.map = null;
+      MapData.marker = null;
     },
 
     initMap() {

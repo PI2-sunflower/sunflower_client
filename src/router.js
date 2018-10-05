@@ -3,6 +3,7 @@ import Router from "vue-router";
 
 import Tracker from "./views/Tracker.vue";
 import Control from "./views/Control.vue";
+import Config from "./views/Config.vue";
 
 Vue.use(Router);
 
@@ -23,6 +24,11 @@ export default new Router({
       path: "/control",
       name: "PositionControl",
       component: Control
+    },
+    {
+      path: "/config",
+      name: "Config",
+      component: Config
     }
   ]
 });

@@ -15,20 +15,20 @@
             <div class="row">
 
               <div class="col col-4">
-                <div :class="'axisbox btn ' + (axis == 'A' ? 'active' : '')" @click="setAxis('A')">
-                  A
+                <div :class="'ax-rotate axisbox btn btn-outline-primary ' + (axis == 'A' ? 'active' : '')" @click="setAxis('A')">
+                  <font-awesome-icon icon="asterisk" />
                 </div>
               </div>
 
               <div class="col col-4">
-                <div :class="'axisbox btn ' + (axis == 'B' ? 'active' : '')" @click="setAxis('B')">
-                  B
+                <div :class="'ax-rot-y axisbox btn btn-outline-primary ' + (axis == 'B' ? 'active' : '')" @click="setAxis('B')">
+                  <font-awesome-icon icon="asterisk" />
                 </div>
               </div>
 
               <div class="col col-4">
-                <div :class="'axisbox btn ' + (axis == 'C' ? 'active' : '')" @click="setAxis('C')">
-                  C
+                <div :class="'ax-rot-x axisbox btn btn-outline-primary ' + (axis == 'C' ? 'active' : '')" @click="setAxis('C')">
+                  <font-awesome-icon icon="asterisk" />
                 </div>
               </div>
             </div>
@@ -120,22 +120,12 @@ export default {
   color: #dc3545;
   margin-left: 10px;
 }
-.axisbox {
-  width: 80px;
-  height: 80px;
-  padding: 0px;
-  border: solid 1px #000;
-}
-.axisbox:hover {
-  border: solid 1px orange;
+.axisbox svg {
+  font-size: 30px;
 }
 .axisbox.active {
-  border: solid 1px blue;
-  background-color: #d4d4d4;
-}
-.axisbox img {
-  width: 80px;
-  height: 80px;
+  background-color: #007bff;
+  color: #fff;
 }
 .command-list {
   max-height: 200px;
@@ -143,5 +133,46 @@ export default {
 }
 .command-list li:nth-child(even) {
   background-color: #dee2e6;
+}
+.ax-rotate svg {
+  animation: roll 2s infinite linear;
+  animation-direction: normal;
+}
+
+.ax-rot-y svg {
+  animation: rotY 2s infinite linear;
+  animation-direction: normal;
+}
+
+.ax-rot-x svg {
+  animation: rotX 2s infinite linear;
+  animation-direction: normal;
+}
+
+@keyframes roll {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes rotY {
+  0% {
+    transform: rotateY(0);
+  }
+  100% {
+    transform: rotateY(180deg);
+  }
+}
+
+@keyframes rotX {
+  0% {
+    transform: rotateX(0);
+  }
+  100% {
+    transform: rotateX(180deg);
+  }
 }
 </style>
