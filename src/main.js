@@ -10,11 +10,20 @@ import {
   faCog,
   faGlobeAmericas,
   faGamepad,
-  faAsterisk
+  faArrowsAlt,
+  faBroadcastTower,
+  faSpinner
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faCog, faGlobeAmericas, faGamepad, faAsterisk);
+library.add(
+  faCog,
+  faGlobeAmericas,
+  faGamepad,
+  faArrowsAlt,
+  faBroadcastTower,
+  faSpinner
+);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 

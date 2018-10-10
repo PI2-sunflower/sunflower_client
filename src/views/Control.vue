@@ -16,19 +16,19 @@
 
               <div class="col col-4">
                 <div :class="'ax-rotate axisbox btn btn-outline-primary ' + (axis == 'A' ? 'active' : '')" @click="setAxis('A')">
-                  <font-awesome-icon icon="asterisk" />
+                  <font-awesome-icon icon="arrows-alt" />
                 </div>
               </div>
 
               <div class="col col-4">
                 <div :class="'ax-rot-y axisbox btn btn-outline-primary ' + (axis == 'B' ? 'active' : '')" @click="setAxis('B')">
-                  <font-awesome-icon icon="asterisk" />
+                  <font-awesome-icon icon="arrows-alt" />
                 </div>
               </div>
 
               <div class="col col-4">
                 <div :class="'ax-rot-x axisbox btn btn-outline-primary ' + (axis == 'C' ? 'active' : '')" @click="setAxis('C')">
-                  <font-awesome-icon icon="asterisk" />
+                  <font-awesome-icon icon="arrows-alt" />
                 </div>
               </div>
             </div>

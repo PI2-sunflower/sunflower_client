@@ -16,8 +16,7 @@
 
           <button v-if="isTracking === true" :class="'btn btn-' + (current.satname ? 'danger' : 'warning')" @click="setTracking(false)">Parar rastreamento</button>
 
-          <img src="/images/spinner.gif" class="loading-spinner" v-if="isTracking && !current.satname" />
-
+          <font-awesome-icon icon="spinner" class="it-is-spinning spin-big" v-if="isTracking && !current.satname" />
         </div><!-- /#tracker-form -->
       </div><!-- /col-6 -->
 
@@ -204,6 +203,9 @@ export default {
 .loading-spinner {
   width: 40px;
   margin-left: 10px;
+}
+.spin-big {
+  font-size: 26px;
 }
 
 #cam-container {

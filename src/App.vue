@@ -20,6 +20,23 @@
               Controle direto
             </router-link>
           </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              <font-awesome-icon icon="broadcast-tower" :class="antennaReady ? 'isReady' : 'isNotReady'" />
+              Antena
+              <font-awesome-icon icon="spinner" class="it-is-spinning" v-if="loadingAntenna" />
+            </a>
+
+            <div class=" dropdown-menu">
+              <a class="dropdown-item" href="javascript: void()" @click="activeAntenna">
+                Ligar
+              </a>
+              <a class="dropdown-item" href="javascript: void()" @click="deactiveAntenna">
+                Desligar
+              </a>
+            </div>
+          </li>
         </ul>
       </nav>
 
@@ -36,6 +53,39 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      antennaReady: false,
+      loadingAntenna: false
+    };
+  },
+
+  methods: {
+    activeAntenna() {
+      this.loadingAntenna = true;
+
+      window.setInterval(() => {
+        this.loadingAntenna = false;
+        this.antennaReady = true;
+      }, 1500);
+    },
+
+    deactiveAntenna() {
+      this.loadingAntenna = true;
+
+      window.setInterval(() => {
+        this.loadingAntenna = false;
+        this.antennaReady = false;
+      }, 1500);
+    }
+  }
+};
+</script>
+
+
 <style>
 .gear-img {
   width: 40px;
@@ -43,5 +93,28 @@
 
 #main-container {
   margin-top: 10px;
+}
+.isReady {
+  color: rgb(40, 167, 69);
+}
+
+.isNotReady {
+  color: rgb(220, 53, 69);
+}
+
+.it-is-spinning {
+  margin-left: 10px;
+  color: rgb(255, 193, 7);
+  animation: full-roll 2s infinite linear;
+  animation-direction: normal;
+}
+
+@keyframes full-roll {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
