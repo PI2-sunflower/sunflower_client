@@ -28,11 +28,11 @@
               <font-awesome-icon icon="spinner" class="it-is-spinning" v-if="loadingAntenna" />
             </a>
 
-            <div class=" dropdown-menu">
-              <a class="dropdown-item" href="javascript: void()" @click="activeAntenna">
+            <div class="antenna-actions dropdown-menu">
+              <a class="dropdown-item" @click="activeAntenna">
                 Ligar
               </a>
-              <a class="dropdown-item" href="javascript: void()" @click="deactiveAntenna">
+              <a class="dropdown-item" @click="deactiveAntenna">
                 Desligar
               </a>
             </div>
@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import axios from "./services/axios-setup";
+
 export default {
   name: "App",
   data() {
@@ -67,19 +69,41 @@ export default {
     activeAntenna() {
       this.loadingAntenna = true;
 
-      window.setInterval(() => {
-        this.loadingAntenna = false;
-        this.antennaReady = true;
-      }, 1500);
+      axios
+        .post("/mqtt-dispatch", {
+          code: "up",
+          topic: "movement/up_down"
+        })
+        .then(r => {
+          console.log(r);
+          this.loadingAntenna = false;
+          this.antennaReady = true;
+        })
+        .catch(e => {
+          console.log(e);
+          this.loadingAntenna = false;
+          this.antennaReady = false;
+        });
     },
 
     deactiveAntenna() {
       this.loadingAntenna = true;
 
-      window.setInterval(() => {
-        this.loadingAntenna = false;
-        this.antennaReady = false;
-      }, 1500);
+      axios
+        .post("/mqtt-dispatch", {
+          code: "down",
+          topic: "movement/up_down"
+        })
+        .then(r => {
+          console.log(r);
+          this.loadingAntenna = false;
+          this.antennaReady = true;
+        })
+        .catch(e => {
+          console.log(e);
+          this.loadingAntenna = false;
+          this.antennaReady = false;
+        });
     }
   }
 };
@@ -107,6 +131,10 @@ export default {
   color: rgb(255, 193, 7);
   animation: full-roll 2s infinite linear;
   animation-direction: normal;
+}
+
+.antenna-actions a {
+  cursor: pointer;
 }
 
 @keyframes full-roll {
