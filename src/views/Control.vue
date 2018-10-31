@@ -57,9 +57,7 @@
     </div>
 
     <div class="col col-6">
-      <div id="cam-container">
-        Video da câmera
-      </div>
+      <Camera />
     </div>
   </div>
 </template>
@@ -67,8 +65,12 @@
 <script>
 import { mapState } from "vuex";
 
+import Camera from "../components/Camera";
+
 export default {
   name: "Control",
+
+  components: { Camera },
 
   data() {
     return {

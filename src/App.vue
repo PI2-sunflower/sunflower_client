@@ -4,7 +4,9 @@
       <nav class="col col-10">
         <ul class="nav nav-pills">
           <li class="nav-item">
-            <span class="navbar-brand disabled">Modo: </span>
+            <span class="navbar-brand disabled">
+              Modo
+            </span>
           </li>
 
           <li class="nav-item">
@@ -66,44 +68,42 @@ export default {
   },
 
   methods: {
-    activeAntenna() {
+    async activeAntenna() {
       this.loadingAntenna = true;
 
-      axios
-        .post("/mqtt-dispatch", {
+      try {
+        let { status, data } = await axios.post("/mqtt-dispatch", {
           code: "up",
           topic: "movement/up_down"
-        })
-        .then(r => {
-          console.log(r);
-          this.loadingAntenna = false;
-          this.antennaReady = true;
-        })
-        .catch(e => {
-          console.log(e);
-          this.loadingAntenna = false;
-          this.antennaReady = false;
         });
+
+        console.log(status);
+        this.loadingAntenna = false;
+        this.antennaReady = !!data.dispatch;
+      } catch (e) {
+        console.log(e);
+        this.loadingAntenna = false;
+        this.antennaReady = false;
+      }
     },
 
-    deactiveAntenna() {
+    async deactiveAntenna() {
       this.loadingAntenna = true;
 
-      axios
-        .post("/mqtt-dispatch", {
+      try {
+        let { status, data } = await axios.post("/mqtt-dispatch", {
           code: "down",
           topic: "movement/up_down"
-        })
-        .then(r => {
-          console.log(r);
-          this.loadingAntenna = false;
-          this.antennaReady = true;
-        })
-        .catch(e => {
-          console.log(e);
-          this.loadingAntenna = false;
-          this.antennaReady = false;
         });
+
+        console.log(status);
+        this.loadingAntenna = false;
+        this.antennaReady = !!data.dispatch;
+      } catch (e) {
+        console.log(e);
+        this.loadingAntenna = false;
+        this.antennaReady = false;
+      }
     }
   }
 };
