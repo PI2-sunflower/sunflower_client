@@ -23,21 +23,12 @@
             </router-link>
           </li>
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              <font-awesome-icon icon="broadcast-tower" :class="antennaReady ? 'isReady' : 'isNotReady'" />
+          <li class="nav-item">
+            <a class="nav-link">
+              <font-awesome-icon icon="broadcast-tower" :class="arm.ready ? 'isReady' : 'isNotReady'" />
               Antena
-              <font-awesome-icon icon="spinner" class="it-is-spinning" v-if="loadingAntenna" />
+              <font-awesome-icon icon="spinner" class="it-is-spinning" v-if="arm.loading" />
             </a>
-
-            <div class="antenna-actions dropdown-menu">
-              <a class="dropdown-item" @click="activeAntenna">
-                Ligar
-              </a>
-              <a class="dropdown-item" @click="deactiveAntenna">
-                Desligar
-              </a>
-            </div>
           </li>
         </ul>
       </nav>
@@ -56,55 +47,13 @@
 </template>
 
 <script>
-import axios from "./services/axios-setup";
+import { mapState } from "vuex";
 
 export default {
   name: "App",
-  data() {
-    return {
-      antennaReady: false,
-      loadingAntenna: false
-    };
-  },
 
-  methods: {
-    async activeAntenna() {
-      this.loadingAntenna = true;
-
-      try {
-        let { status, data } = await axios.post("/mqtt-dispatch", {
-          code: "up",
-          topic: "movement/up_down"
-        });
-
-        console.log(status);
-        this.loadingAntenna = false;
-        this.antennaReady = !!data.dispatch;
-      } catch (e) {
-        console.log(e);
-        this.loadingAntenna = false;
-        this.antennaReady = false;
-      }
-    },
-
-    async deactiveAntenna() {
-      this.loadingAntenna = true;
-
-      try {
-        let { status, data } = await axios.post("/mqtt-dispatch", {
-          code: "down",
-          topic: "movement/up_down"
-        });
-
-        console.log(status);
-        this.loadingAntenna = false;
-        this.antennaReady = !!data.dispatch;
-      } catch (e) {
-        console.log(e);
-        this.loadingAntenna = false;
-        this.antennaReady = false;
-      }
-    }
+  computed: {
+    ...mapState(["arm"])
   }
 };
 </script>

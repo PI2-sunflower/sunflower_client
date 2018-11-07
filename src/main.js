@@ -12,7 +12,10 @@ import {
   faGamepad,
   faArrowsAlt,
   faBroadcastTower,
-  faSpinner
+  faSpinner,
+  faLevelUpAlt,
+  faLevelDownAlt,
+  faStopCircle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -22,7 +25,10 @@ library.add(
   faGamepad,
   faArrowsAlt,
   faBroadcastTower,
-  faSpinner
+  faSpinner,
+  faLevelUpAlt,
+  faLevelDownAlt,
+  faStopCircle
 );
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
