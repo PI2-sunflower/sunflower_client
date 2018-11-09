@@ -17,6 +17,11 @@ export default new Vuex.Store({
 
     control: {
       history: []
+    },
+
+    arm: {
+      ready: false,
+      loading: false
     }
   },
 
@@ -25,8 +30,16 @@ export default new Vuex.Store({
       state.track = track;
     },
 
-    addControlCommand(state, { angle, axis }) {
-      state.control.history.push({ angle, axis });
+    addControlCommand(state, command) {
+      state.control.history.push(command);
+    },
+
+    setArmReady(state, isReady) {
+      state.arm.ready = isReady;
+    },
+
+    setArmLoading(state, loading) {
+      state.arm.loading = !!loading;
     }
   },
 
@@ -35,8 +48,16 @@ export default new Vuex.Store({
       context.commit("setTrackData", track);
     },
 
-    addControlCommand(context, { angle, axis }) {
-      context.commit("addControlCommand", { angle, axis });
+    addControlCommand(context, command) {
+      context.commit("addControlCommand", command);
+    },
+
+    setArmReady(context, isReady) {
+      context.commit("setArmReady", isReady);
+    },
+
+    setArmLoading(context, loading) {
+      context.commit("setArmLoading", loading);
     }
   }
 });

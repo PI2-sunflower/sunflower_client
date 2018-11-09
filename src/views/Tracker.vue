@@ -41,8 +41,8 @@
     </div><!-- /row -->
 
     <div class="row">
-      <div id="cam-container" class="col col-6">
-        Video da câmera
+      <div class="col col-6">
+        <Camera />
       </div><!-- /col-6 -->
 
       <div id="map-container" class="col col-6">
@@ -57,6 +57,8 @@ import { mapState } from "vuex";
 import { getMap, getMarker } from "../services/track-map";
 import axios from "../services/axios-setup";
 
+import Camera from "../components/Camera";
+
 const MapData = {
   map: null,
   marker: null
@@ -67,11 +69,11 @@ window.MapData = MapData;
 export default {
   name: "Tracker",
 
-  components: {},
+  components: { Camera },
 
   data() {
     return {
-      NORD: "25544",
+      NORD: "32293",
       isTracking: false,
       current: {}
     };
@@ -208,17 +210,12 @@ export default {
   font-size: 26px;
 }
 
-#cam-container {
-  background-color: gray;
-  height: 300px;
-}
-
 #map-container {
   height: 300px;
 }
 
 #map-tracker {
-  background-color: yellow;
+  background-color: #f2f2f2;
   width: 100%;
   height: 100%;
 }

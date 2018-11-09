@@ -3,42 +3,58 @@
     <div class="col col-6">
       <div class="row">
         <div class="col col-12">
-          <div class="form-group">
-            <label for="ang">Angulo</label>
-            <input id="ang" type="number" class="form-control" placeholder="0.0" v-model="angle" />
-            <small class="err-message" v-if="errMessage !== ''">{{errMessage}}</small>
-          </div>
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a :class="'controlTab nav-link ' + (controlTab == 'b' ? 'active' : '')" @click="setTab('b')">Braço</a>
+            </li>
 
-          <div class="form-group">
-            <label for="axis">Eixo</label>
-
-            <div class="row">
-
-              <div class="col col-4">
-                <div :class="'ax-rotate axisbox btn btn-outline-primary ' + (axis == 'A' ? 'active' : '')" @click="setAxis('A')">
-                  <font-awesome-icon icon="arrows-alt" />
-                </div>
-              </div>
-
-              <div class="col col-4">
-                <div :class="'ax-rot-y axisbox btn btn-outline-primary ' + (axis == 'B' ? 'active' : '')" @click="setAxis('B')">
-                  <font-awesome-icon icon="arrows-alt" />
-                </div>
-              </div>
-
-              <div class="col col-4">
-                <div :class="'ax-rot-x axisbox btn btn-outline-primary ' + (axis == 'C' ? 'active' : '')" @click="setAxis('C')">
-                  <font-awesome-icon icon="arrows-alt" />
-                </div>
-              </div>
-            </div>
-          </div>
+            <li class="nav-item">
+              <a :class="'controlTab nav-link ' + (controlTab == 'a' ? 'active' : '')" @click="setTab('a')">Antena</a>
+            </li>
+          </ul>
 
           <br />
 
-          <button class="btn btn-primary" @click="dispatchDirection">
-            Enviar direções
-          </button>
+          <UpDownMovement v-if="controlTab == 'b'" />
+
+          <div v-if="controlTab == 'a'">
+
+            <div class="form-group">
+              <label for="ang">Angulo</label>
+              <input id="ang" type="number" class="form-control" placeholder="0.0" v-model="angle" />
+              <small class="err-message" v-if="errMessage !== ''">{{errMessage}}</small>
+            </div>
+
+            <div class="form-group">
+              <label for="axis">Eixo</label>
+
+              <div class="row">
+                <div class="col col-4">
+                  <div :class="'ax-rotate axisbox btn btn-outline-primary ' + (axis == 'A' ? 'active' : '')" @click="setAxis('A')">
+                    <font-awesome-icon icon="arrows-alt" />
+                  </div>
+                </div>
+
+                <div class="col col-4">
+                  <div :class="'ax-rot-y axisbox btn btn-outline-primary ' + (axis == 'B' ? 'active' : '')" @click="setAxis('B')">
+                    <font-awesome-icon icon="arrows-alt" />
+                  </div>
+                </div>
+
+                <div class="col col-4">
+                  <div :class="'ax-rot-x axisbox btn btn-outline-primary ' + (axis == 'C' ? 'active' : '')" @click="setAxis('C')">
+                    <font-awesome-icon icon="arrows-alt" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <br />
+
+            <button class="btn btn-primary" @click="dispatchDirection">
+              Enviar direções
+            </button>
+          </div><!-- ./controlTab == 'a' -->
         </div><!-- /col-12 -->
 
         <div class="col col-12">
@@ -48,8 +64,8 @@
           <span>Histórico de comandos</span>
 
           <ul class="list-group list-group-flush command-list">
-            <li v-for="(h, i) in control.history" :key="i" class="list-group-item">
-              G angle={{h.angle}}; axis={{h.axis}}
+            <li v-for="(command, i) in control.history" :key="i" class="list-group-item">
+              {{command}}
             </li>
           </ul>
         </div>
@@ -57,9 +73,7 @@
     </div>
 
     <div class="col col-6">
-      <div id="cam-container">
-        Video da câmera
-      </div>
+      <Camera />
     </div>
   </div>
 </template>
@@ -67,11 +81,20 @@
 <script>
 import { mapState } from "vuex";
 
+import Camera from "../components/Camera";
+import UpDownMovement from "../components/UpDownMovement";
+
 export default {
   name: "Control",
 
+  components: {
+    Camera,
+    UpDownMovement
+  },
+
   data() {
     return {
+      controlTab: "b",
       angle: 0,
       axis: "B",
       errMessage: ""
@@ -83,6 +106,10 @@ export default {
   },
 
   methods: {
+    setTab(tab) {
+      this.controlTab = tab;
+    },
+
     isVallidAngle() {
       let angle = parseFloat(this.angle);
 
@@ -104,11 +131,7 @@ export default {
         return;
       }
 
-      let command = {
-        angle: this.angle,
-        axis: this.axis
-      };
-
+      let command = `Angle=${this.angle}; Axis=${this.axis}`;
       this.$store.dispatch("addControlCommand", command);
     }
   }
@@ -174,5 +197,13 @@ export default {
   100% {
     transform: rotateX(180deg);
   }
+}
+
+.controlTab {
+  cursor: pointer;
+}
+
+.controlTab.active {
+  color: rgb(0, 123, 255) !important;
 }
 </style>

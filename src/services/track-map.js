@@ -50,3 +50,13 @@ export const getMarker = (map, lat, long) => {
 
   return marker;
 };
+
+export const mapTracer = (map, latlngs) => {
+  // var latlngs = [[45.51, -122.68], [37.77, -122.43], [34.04, -118.2]];
+  let polyline = L.polyline(latlngs, { color: "red" });
+  polyline.addTo(map);
+  // zoom the map to the polyline
+  // map.fitBounds(polyline.getBounds());
+
+  return polyline;
+};

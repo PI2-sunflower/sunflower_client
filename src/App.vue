@@ -4,7 +4,9 @@
       <nav class="col col-10">
         <ul class="nav nav-pills">
           <li class="nav-item">
-            <span class="navbar-brand disabled">Modo: </span>
+            <span class="navbar-brand disabled">
+              Modo
+            </span>
           </li>
 
           <li class="nav-item">
@@ -21,21 +23,12 @@
             </router-link>
           </li>
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              <font-awesome-icon icon="broadcast-tower" :class="antennaReady ? 'isReady' : 'isNotReady'" />
+          <li class="nav-item">
+            <a class="nav-link">
+              <font-awesome-icon icon="broadcast-tower" :class="arm.ready ? 'isReady' : 'isNotReady'" />
               Antena
-              <font-awesome-icon icon="spinner" class="it-is-spinning" v-if="loadingAntenna" />
+              <font-awesome-icon icon="spinner" class="it-is-spinning" v-if="arm.loading" />
             </a>
-
-            <div class=" dropdown-menu">
-              <a class="dropdown-item" href="javascript: void()" @click="activeAntenna">
-                Ligar
-              </a>
-              <a class="dropdown-item" href="javascript: void()" @click="deactiveAntenna">
-                Desligar
-              </a>
-            </div>
           </li>
         </ul>
       </nav>
@@ -54,33 +47,13 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "App",
-  data() {
-    return {
-      antennaReady: false,
-      loadingAntenna: false
-    };
-  },
 
-  methods: {
-    activeAntenna() {
-      this.loadingAntenna = true;
-
-      window.setInterval(() => {
-        this.loadingAntenna = false;
-        this.antennaReady = true;
-      }, 1500);
-    },
-
-    deactiveAntenna() {
-      this.loadingAntenna = true;
-
-      window.setInterval(() => {
-        this.loadingAntenna = false;
-        this.antennaReady = false;
-      }, 1500);
-    }
+  computed: {
+    ...mapState(["arm"])
   }
 };
 </script>
@@ -107,6 +80,10 @@ export default {
   color: rgb(255, 193, 7);
   animation: full-roll 2s infinite linear;
   animation-direction: normal;
+}
+
+.antenna-actions a {
+  cursor: pointer;
 }
 
 @keyframes full-roll {
