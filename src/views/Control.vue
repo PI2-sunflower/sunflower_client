@@ -79,6 +79,7 @@
 </template>
 
 <script>
+import axios from "../services/axios-setup";
 import { mapState } from "vuex";
 
 import Camera from "../components/Camera";
@@ -113,8 +114,8 @@ export default {
     isVallidAngle() {
       let angle = parseFloat(this.angle);
 
-      if (isNaN(angle) || angle < -360.0 || angle > 360.0) {
-        this.errMessage = "Apenas angulos entre -360.0 a 360.0 são permitidos";
+      if (isNaN(angle) || angle < -0 || angle > 360.0) {
+        this.errMessage = "Apenas angulos entre 0 a 360.0 são permitidos";
         return false;
       } else {
         this.errMessage = "";
@@ -133,6 +134,21 @@ export default {
 
       let command = `Angle=${this.angle}; Axis=${this.axis}`;
       this.$store.dispatch("addControlCommand", command);
+
+      this.sendMQTT();
+    },
+
+    async sendMQTT() {
+      try {
+        let { data } = await axios.post("/mqtt-dispatch", {
+          command: "move_axis",
+          params: {
+            angle_1: 10,
+            angle_2: 20,
+            angle_3: 30
+          }
+        });
+      } catch (e) {}
     }
   }
 };

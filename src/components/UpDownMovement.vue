@@ -33,16 +33,16 @@ export default {
   name: "UpDownMovement",
 
   methods: {
-    async sendMqtt({ code, topic }) {
+    async sendMqtt(action) {
       this.$store.dispatch("setArmLoading", true);
 
       try {
         this.$store.dispatch("setArmLoading", false);
 
-        let { data } = await axios.post("/mqtt-dispatch", { code, topic });
+        let { data } = await axios.post("/mqtt-dispatch", { ...action });
 
-        let command = `Topic=${topic}; Code=${code}`;
-        this.$store.dispatch("addControlCommand", command);
+        //let command = `Topic=${topic}; Code=${code}`;
+        //this.$store.dispatch("addControlCommand", command);
 
         this.$store.dispatch("setArmReady", !!data.dispatch);
       } catch (e) {
@@ -54,22 +54,19 @@ export default {
 
     activeArm() {
       this.sendMqtt({
-        code: "up",
-        topic: "movement/up_down"
+        command: "go_up"
       });
     },
 
     deactiveArm() {
       this.sendMqtt({
-        code: "down",
-        topic: "movement/up_down"
+        command: "go_down"
       });
     },
 
     stopArm() {
       this.sendMqtt({
-        code: "stop",
-        topic: "movement/up_down"
+        command: "stop_up_down"
       });
     }
   }
