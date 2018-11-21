@@ -9,7 +9,7 @@
             </li>
 
             <li class="nav-item">
-              <a :class="'controlTab nav-link ' + (controlTab == 'a' ? 'active' : '')" @click="setTab('a')">Antena</a>
+              <a :class="'controlTab nav-link ' + (controlTab == 'a' ? 'active' : '')" @click="setTab('a')">Eixos</a>
             </li>
           </ul>
 

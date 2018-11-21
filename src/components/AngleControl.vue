@@ -9,7 +9,7 @@
 
       <div class="col col-8">
         <div class="form-inline">
-          <label :for="'angle_' + angle.index" :class="(angle.active ? '' : 'disabled')">Angulo {{angle.index}}</label> &nbsp;
+          <label :for="'angle_' + angle.index" :class="(angle.active ? '' : 'disabled')">{{angle.name}}</label> &nbsp;
           <input :id="'angle_' + angle.index" type="number" :class="'form-control ' + (angle.active ? '' : 'disabled')" placeholder="0.0" v-model="angle.value" :disabled="!angle.active" />
         </div>
       </div>
@@ -40,9 +40,9 @@ export default {
   data() {
     return {
       angles: [
-        { index: 1, value: 1, active: true },
-        { index: 2, value: 2, active: false },
-        { index: 3, value: 3, active: true }
+        { index: 1, value: 1, active: true, name: "Azimutal" },
+        { index: 2, value: 2, active: true, name: "Elevação" },
+        { index: 3, value: 3, active: true, name: "Parabólica" }
       ],
 
       sendingRequest: false,
