@@ -22,6 +22,13 @@ export default new Vuex.Store({
     arm: {
       ready: false,
       loading: false
+    },
+
+    positions: {
+      latitude: 0,
+      longitude: 0,
+      altitude: 0,
+      magnetometer: 0
     }
   },
 
@@ -40,6 +47,10 @@ export default new Vuex.Store({
 
     setArmLoading(state, loading) {
       state.arm.loading = !!loading;
+    },
+
+    setPositions(state, positions) {
+      state.positions = positions;
     }
   },
 
@@ -58,6 +69,10 @@ export default new Vuex.Store({
 
     setArmLoading(context, loading) {
       context.commit("setArmLoading", loading);
+    },
+
+    setPositions(context, positions) {
+      context.commit("setPositions", positions);
     }
   }
 });

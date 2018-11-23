@@ -36,6 +36,7 @@
       <div class="col col-2">
         <router-link to="/config" active-class="active" class="btn btn-outline-primary">
           <font-awesome-icon icon="cog" />
+          Configurações
         </router-link>
       </div>
     </div><!-- /row -->
