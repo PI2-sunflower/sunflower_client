@@ -42,7 +42,8 @@
 
     <div class="row">
       <div class="col col-6">
-        <Camera />
+        <Camera v-if="!isTracking" />
+        <Camera v-if="isTracking" :NORD="NORD" />
       </div><!-- /col-6 -->
 
       <div id="map-container" class="col col-6">
