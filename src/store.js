@@ -28,7 +28,8 @@ export default new Vuex.Store({
       latitude: 0,
       longitude: 0,
       altitude: 0,
-      magnetometer: 0
+      magnetometer: 0,
+      engine_speed: 0
     }
   },
 

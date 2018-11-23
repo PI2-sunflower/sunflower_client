@@ -21,6 +21,11 @@
         <label for="mag">Magnetômetro</label>
         <input type="text" class="form-control" id="mag" v-model="magnetometer">
       </div>
+
+      <div class="form-group">
+        <label for="engine">Velocidade do motor</label>
+        <input type="text" class="form-control" id="engine" v-model="engine_speed">
+      </div>
     </div>
 
     <div :class="error ? 'message-err' : 'message-ok'" v-if="message !== ''">
@@ -50,6 +55,7 @@ export default {
       longitude: 0,
       altitude: 0,
       magnetometer: 0,
+      engine_speed: 0,
 
       sendingData: false,
       message: "",
@@ -76,11 +82,12 @@ export default {
   methods: {
     getFromNavigator() {
       navigator.geolocation.getCurrentPosition(position => {
-        let { latitude, longitude, altitude } = position.coords;
+        let { latitude, longitude, altitude, engine_speed } = position.coords;
 
         if (latitude !== null) this.latitude = latitude;
         if (longitude !== null) this.longitude = longitude;
         if (altitude !== null) this.altitude = altitude;
+        if (engine_speed !== null) this.engine_speed = engine_speed;
       });
     },
 
@@ -89,7 +96,13 @@ export default {
         return;
       }
 
-      const { latitude, longitude, altitude, magnetometer } = this;
+      const {
+        latitude,
+        longitude,
+        altitude,
+        magnetometer,
+        engine_speed
+      } = this;
       this.sendingData = true;
 
       try {
@@ -97,12 +110,19 @@ export default {
           latitude,
           longitude,
           altitude,
-          magnetometer
+          magnetometer,
+          engine_speed
         });
 
         this.error = false;
         this.message = "Posição atualizada com sucesso";
-        this.updateLocalState({ latitude, longitude, altitude, magnetometer });
+        this.updateLocalState({
+          latitude,
+          longitude,
+          altitude,
+          magnetometer,
+          engine_speed
+        });
       } catch (e) {
         this.setErrorMessage("Não foi possível atualizar a posição");
         console.log(e);
@@ -112,12 +132,13 @@ export default {
     },
 
     validateData() {
-      let { latitude, longitude, altitude, magnetometer } = this;
+      let { latitude, longitude, altitude, magnetometer, engine_speed } = this;
 
       latitude = parseFloat(latitude);
       longitude = parseFloat(longitude);
       altitude = parseFloat(altitude);
       magnetometer = parseFloat(magnetometer);
+      engine_speed = parseInt(engine_speed);
 
       const invalidField = field => `${field} é um número inválido.`;
 
@@ -141,6 +162,11 @@ export default {
         return false;
       } else this.magnetometer = magnetometer;
 
+      if (isNaN(engine_speed) || (engine_speed < 0 || engine_speed > 1000)) {
+        this.setErrorMessage("Velocidade do motor deve estar entre 0 a 1000");
+        return false;
+      } else this.engine_speed = engine_speed;
+
       return true;
     },
 
@@ -149,17 +175,25 @@ export default {
       this.message = message;
     },
 
-    updateLocalState({ latitude, longitude, altitude, magnetometer }) {
+    updateLocalState({
+      latitude,
+      longitude,
+      altitude,
+      magnetometer,
+      engine_speed
+    }) {
       this.latitude = latitude;
       this.altitude = altitude;
       this.longitude = longitude;
       this.magnetometer = magnetometer;
+      this.engine_speed = engine_speed;
 
       this.$store.dispatch("setPositions", {
         latitude,
         longitude,
         altitude,
-        magnetometer
+        magnetometer,
+        engine_speed
       });
     }
   }
