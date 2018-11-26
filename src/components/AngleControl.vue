@@ -1,21 +1,16 @@
 <template>
   <div class="angle-control row">
     <div class="col col-12 row axis" v-for="angle in angles" :key="angle.index">
-      <div class="col col-2">
-        <div :class="'ax-rotate-'+ angle.index +' axisbox btn btn-outline-primary'">
-          <font-awesome-icon icon="arrows-alt" />
-        </div>
-      </div>
-
-      <div class="col col-8">
+      <div class="col col-12">
         <div class="form-inline">
-          <label :for="'angle_' + angle.index" :class="(angle.active ? '' : 'disabled')">{{angle.name}}</label> &nbsp;
-          <input :id="'angle_' + angle.index" type="number" :class="'form-control ' + (angle.active ? '' : 'disabled')" placeholder="0.0" v-model="angle.value" :disabled="!angle.active" />
-        </div>
-      </div>
+          <div class="col col-3 angle-label">
+            <label :for="'angle_' + angle.index">{{angle.name}}</label> &nbsp;
+          </div>
 
-      <div class="col col-2">
-        <input class="form-check-input" type="checkbox" :value="angle.active" :checked="angle.active" v-model="angle.active">
+          <div class="col col-3">
+            <input :id="'angle_' + angle.index" type="number" class="form-control" placeholder="0.0" v-model="angle.value" />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -40,9 +35,9 @@ export default {
   data() {
     return {
       angles: [
-        { index: 1, value: 1, active: true, name: "Azimutal" },
-        { index: 2, value: 2, active: true, name: "Elevação" },
-        { index: 3, value: 3, active: true, name: "Parabólica" }
+        { index: 1, value: 1, name: "Azimutal" },
+        { index: 2, value: 2, name: "Elevação" },
+        { index: 3, value: 3, name: "Parabólica" }
       ],
 
       sendingRequest: false,
@@ -74,14 +69,10 @@ export default {
 
     getParams() {
       return this.angles.reduce((acc, curr) => {
-        if (curr.active) {
-          acc = {
-            ...acc,
-            [`angle_${curr.index}`]: parseInt(curr.value)
-          };
-        }
-
-        return acc;
+        return {
+          ...acc,
+          [`angle_${curr.index}`]: parseInt(curr.value)
+        };
       }, {});
     }
   }
@@ -89,6 +80,10 @@ export default {
 </script>
 
 <style scoped>
+.angle-label {
+  line-height: 0px;
+}
+
 .err-message {
   color: #dc3545;
   margin-left: 10px;
