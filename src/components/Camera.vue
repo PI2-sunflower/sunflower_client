@@ -1,14 +1,15 @@
 <template>
   <div class="cam-container">
-    <img src="../assets/logo.png" class="cam-logo" />
-    <!--
-    <img :src="'http://localhost:8000/plotter/plot_azimuth_elevation/' + NORD + '/-15.989620/-48.044411/500/28/17/05/2018/1000/30'" class="cam-logo-plot" v-if="NORD.length > 0" />
-    -->
+    <img src="../assets/logo.png" class="cam-logo" v-if="NORD.length === 0" />
+
+    <img :src="imgUrl" class="cam-logo-plot" v-if="NORD.length > 0" />
   </div>
 </template>
 
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "Camera",
 
@@ -16,6 +17,43 @@ export default {
     NORD: {
       type: String,
       default: ""
+    }
+  },
+
+  computed: {
+    ...mapState(["positions"]),
+
+    imgUrl() {
+      const { latitude, longitude, altitude } = this.positions;
+      const date = new Date();
+
+      const BASE_URL = "http://localhost:8000/plotter/plot_azimuth_elevation";
+
+      const PLOTTER =
+        "/" +
+        this.NORD +
+        "/" +
+        latitude +
+        "/" +
+        longitude +
+        "/" +
+        altitude +
+        "/" +
+        date.getFullYear() +
+        "/" +
+        date.getMonth() +
+        "/" +
+        date.getDate() +
+        "/" +
+        date.getHours() +
+        "/" +
+        date.getMinutes() +
+        "/" +
+        date.getSeconds() +
+        "/" +
+        "1000/2";
+
+      return BASE_URL + PLOTTER;
     }
   }
 };
