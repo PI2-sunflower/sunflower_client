@@ -22,7 +22,7 @@
     </div>
 
     <div class="col col-6">
-      <Camera />
+      <BrokerHistory />
     </div>
   </div>
 </template>
@@ -30,17 +30,17 @@
 <script>
 import { mapState } from "vuex";
 
-import Camera from "../components/Camera";
 import UpDownMovement from "../components/UpDownMovement";
 import AngleControl from "../components/AngleControl";
+import BrokerHistory from "../components/BrokerHistory";
 
 export default {
   name: "Control",
 
   components: {
-    Camera,
     UpDownMovement,
-    AngleControl
+    AngleControl,
+    BrokerHistory
   },
 
   data() {

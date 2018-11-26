@@ -21,22 +21,18 @@
       </div><!-- /col-6 -->
 
       <div class="col col-6">
-        <table class="table table-striped">
-          <tbody>
-            <tr>
-              <td>Name:</td>
-              <td>{{current.satname}}</td>
-            </tr>
-            <tr>
-              <td>Latidude:</td>
-              <td>{{current.satlatitude}}</td>
-            </tr>
-            <tr>
-              <td>Longitude:</td>
-              <td>{{current.satlongitude}}</td>
-            </tr>
-          </tbody>
-        </table>
+        <ul class="nav nav-tabs tracker-tabs">
+          <li class="nav-item">
+            <a :class="'nav-link ' + (tab === 'satposition' ? 'active' : '')" @click="setTab('satposition')">Posição atual</a>
+          </li>
+
+          <li class="nav-item">
+            <a :class="'nav-link ' + (tab === 'broker' ? 'active' : '')" @click="setTab('broker')">Histórico de comandos</a>
+          </li>
+        </ul>
+
+        <SatCurPosition v-if="tab === 'satposition'" :satname="current.satname" :satlatitude="current.satlatitude" :satlongitude="current.satlongitude" />
+        <BrokerHistory v-if="tab === 'broker'" class="Tracker-BrokerHistory" />
       </div><!-- /col-6 -->
     </div><!-- /row -->
 
@@ -59,6 +55,8 @@ import { getMap, getMarker } from "../services/track-map";
 import axios from "../services/axios-setup";
 
 import Camera from "../components/Camera";
+import SatCurPosition from "../components/SatCurPosition";
+import BrokerHistory from "../components/BrokerHistory";
 
 const MapData = {
   map: null,
@@ -70,10 +68,15 @@ window.MapData = MapData;
 export default {
   name: "Tracker",
 
-  components: { Camera },
+  components: {
+    Camera,
+    SatCurPosition,
+    BrokerHistory
+  },
 
   data() {
     return {
+      tab: "satposition",
       NORD: "32293",
       isTracking: false,
       current: {}
@@ -102,6 +105,12 @@ export default {
   },
 
   methods: {
+    setTab(nextTab) {
+      if (nextTab === "satposition" || nextTab === "broker") {
+        this.tab = nextTab;
+      }
+    },
+
     setTracking(value) {
       if (typeof value !== "boolean") throw new Error("Value must be boolean");
       this.isTracking = !!value;
@@ -219,5 +228,19 @@ export default {
   background-color: #f2f2f2;
   width: 100%;
   height: 100%;
+}
+.tracker-tabs {
+  margin-bottom: 10px;
+}
+.tracker-tabs a {
+  cursor: pointer;
+}
+
+.tracker-tabs a.active {
+  color: #007bff !important;
+}
+
+.Tracker-BrokerHistory {
+  height: 160px;
 }
 </style>
