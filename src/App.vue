@@ -28,7 +28,12 @@
               <font-awesome-icon icon="broadcast-tower" :class="arm.ready ? 'isReady' : 'isNotReady'" />
               Antena
               <font-awesome-icon icon="spinner" class="it-is-spinning" v-if="arm.loading" />
+              &nbsp;
+              <span class="position-error" v-if="positions.error">
+                Não pode obter a posição do braço
+              </span>
             </a>
+
           </li>
         </ul>
       </nav>
@@ -50,11 +55,29 @@
 <script>
 import { mapState } from "vuex";
 
+import fetchPosition from "./services/fetch-position";
+
 export default {
   name: "App",
 
   computed: {
-    ...mapState(["arm"])
+    ...mapState(["arm", "positions"])
+  },
+
+  async mounted() {
+    let { error, data } = await fetchPosition();
+
+    if (error.length === 0) {
+      this.updateLocalState(data);
+    } else {
+      this.$store.dispatch("setPositionsError", true);
+    }
+  },
+
+  methods: {
+    updateLocalState(data) {
+      this.$store.dispatch("setPositions", data);
+    }
   }
 };
 </script>
@@ -94,5 +117,9 @@ export default {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.position-error {
+  color: #dc3545;
 }
 </style>

@@ -29,7 +29,8 @@ export default new Vuex.Store({
       longitude: 0,
       altitude: 0,
       magnetometer: 0,
-      engine_speed: 0
+      engine_speed: 0,
+      error: false
     }
   },
 
@@ -51,7 +52,11 @@ export default new Vuex.Store({
     },
 
     setPositions(state, positions) {
-      state.positions = positions;
+      state.positions = { ...positions, error: false };
+    },
+
+    setPositionsError(state, errorState) {
+      state.positions.error = errorState;
     }
   },
 
@@ -74,6 +79,10 @@ export default new Vuex.Store({
 
     setPositions(context, positions) {
       context.commit("setPositions", positions);
+    },
+
+    setPositionsError(context, errorState) {
+      context.commit("setPositionsError", !!errorState);
     }
   }
 });

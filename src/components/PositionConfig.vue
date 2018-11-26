@@ -45,6 +45,7 @@
 
 <script>
 import axios from "../services/axios-setup";
+import fetchPosition from "../services/fetch-position";
 
 export default {
   name: "PositionConfig",
@@ -64,18 +65,12 @@ export default {
   },
 
   async mounted() {
-    const URL = "/get-arm-position";
-    try {
-      let { status, data } = await axios.get(URL);
+    let { error, data } = await fetchPosition();
 
-      if (status === 200) {
-        this.updateLocalState(data);
-      } else {
-        this.setErrorMessage("Não pode obter os dados do servidor");
-      }
-    } catch (e) {
-      this.setErrorMessage("Não pode obter os dados do servidor");
-      console.lor(e);
+    if (error.length === 0) {
+      this.updateLocalState(data);
+    } else {
+      this.setErrorMessage(error);
     }
   },
 
