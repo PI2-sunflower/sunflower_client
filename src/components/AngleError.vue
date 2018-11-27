@@ -99,18 +99,26 @@ export default {
       if (error === false) {
         this.setAngleError("angle_3", value);
       }
+    },
+
+    angleError(newAngleError) {
+      this.setAnglesErrors(newAngleError);
     }
   },
 
   mounted() {
-    let { angle_1, angle_2, angle_3 } = this.angleError;
-
-    this.angle_1 = angle_1;
-    this.angle_2 = angle_2;
-    this.angle_3 = angle_3;
+    this.setAnglesErrors(this.angleError);
   },
 
   methods: {
+    setAnglesErrors(newAngleError) {
+      let { angle_1, angle_2, angle_3 } = newAngleError;
+
+      this.angle_1 = angle_1;
+      this.angle_2 = angle_2;
+      this.angle_3 = angle_3;
+    },
+
     validateValue(value) {
       let parsed = parseFloat(value);
 

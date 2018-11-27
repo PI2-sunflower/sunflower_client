@@ -36,9 +36,9 @@ export default {
     return {
       currentOp: "b",
       angleError: {
-        angle_1: 1.0,
-        angle_2: 2.0,
-        angle_3: 3.0,
+        angle_1: 0.0,
+        angle_2: 0.0,
+        angle_3: 0.0,
       }
     }
   },
@@ -46,6 +46,23 @@ export default {
   components: {
     OperationMode,
     AngleError
+  },
+
+  async mounted() {
+    try {
+      let { data } = await axios.get("/get-arm-data");
+      let angleError = {
+        angle_1: data.error_angle_1,
+        angle_2: data.error_angle_2,
+        angle_3: data.error_angle_3,
+      };
+
+      this.currentOp = data.operation;
+      this.angleError = angleError;
+    } catch(e) {
+      console.log("Nao pode obter arm data");
+      console.log(e);
+    }
   },
 
   methods: {
@@ -66,7 +83,7 @@ export default {
           angles: this.angleError
         };
 
-        let { status, data } = await axios.post("/update-general-params", {
+        let { status, data } = await axios.post("/set-arm-data", {
           ...postData
         });
         console.log(status);
