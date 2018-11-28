@@ -14,6 +14,10 @@
       />
     </div>
 
+    <div class="col col-12 message-err">
+      <small>{{errorMessage}}</small>
+    </div>
+
     <div class="col col-12">
       <button
         class="btn btn-primary"
@@ -38,9 +42,11 @@ export default {
       angleError: {
         angle_1: 0.0,
         angle_2: 0.0,
-        angle_3: 0.0,
-      }
-    }
+        angle_3: 0.0
+      },
+      errorMessage: "",
+      names: ["Azimutal", "Elevação", "Parabólica"]
+    };
   },
 
   components: {
@@ -54,12 +60,12 @@ export default {
       let angleError = {
         angle_1: data.error_angle_1,
         angle_2: data.error_angle_2,
-        angle_3: data.error_angle_3,
+        angle_3: data.error_angle_3
       };
 
       this.currentOp = data.operation;
       this.angleError = angleError;
-    } catch(e) {
+    } catch (e) {
       console.log("Nao pode obter arm data");
       console.log(e);
     }
@@ -67,7 +73,7 @@ export default {
 
   methods: {
     setOperationMode(newOp) {
-      if(newOp === "a" || newOp === "b") {
+      if (newOp === "a" || newOp === "b") {
         this.currentOp = newOp;
       }
     },
@@ -76,7 +82,27 @@ export default {
       this.angleError[angle] = value;
     },
 
+    validateAngles() {
+      const angles = Object.keys(this.angleError);
+
+      for (let i = 0; i < angles.length; ++i) {
+        let value = parseFloat(this.angleError[angles[i]]);
+
+        if (isNaN(value)) {
+          return "Valor inválido em " + this.names[i];
+        }
+      }
+
+      return "";
+    },
+
     async dispatchUpdate() {
+      this.errorMessage = this.validateAngles();
+
+      if (this.errorMessage.length > 0) {
+        return;
+      }
+
       try {
         let postData = {
           operation: this.currentOp,
@@ -88,14 +114,17 @@ export default {
         });
         console.log(status);
         console.log(data);
-      } catch(e) {
+      } catch (e) {
         console.log(e);
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
-
+.message-err {
+  margin-bottom: 15px;
+  color: rgb(200, 35, 51);
+}
 </style>

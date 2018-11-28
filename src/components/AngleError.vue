@@ -1,6 +1,6 @@
 <template>
   <fieldset>
-    <legend class="col-form-label">Erro dos ângulos</legend>
+    <legend class="col-form-label">Offset dos ângulos</legend>
 
     <div class="form-group">
       <label for="err_angle_1">Azimutal</label>
@@ -12,10 +12,6 @@
         placeholder="0.0"
         v-model="angle_1"
       >
-      <small
-        class="form-text value-error"
-        v-if="error1"
-      >Valor inválido</small>
     </div>
 
     <div class="form-group">
@@ -28,10 +24,6 @@
         placeholder="0.0"
         v-model="angle_2"
       >
-      <small
-        class="form-text value-error"
-        v-if="error2"
-      >Valor inválido</small>
     </div>
 
     <div class="form-group">
@@ -44,10 +36,6 @@
         placeholder="0.0"
         v-model="angle_3"
       >
-      <small
-        class="form-text value-error"
-        v-if="error3"
-      >Valor inválido</small>
     </div>
   </fieldset>
 </template>
@@ -65,40 +53,21 @@ export default {
     return {
       angle_1: 0.0,
       angle_2: 0.0,
-      angle_3: 0.0,
-
-      error1: false,
-      error2: false,
-      error3: false,
-    }
+      angle_3: 0.0
+    };
   },
 
   watch: {
     angle_1(newData) {
-      let [error, value] = this.validateValue(newData); 
-      this.error1 = error;
-
-      if (error === false) {
-        this.setAngleError("angle_1", value);
-      }
+      this.setAngleError("angle_1", newData);
     },
 
     angle_2(newData) {
-      let [error, value] = this.validateValue(newData); 
-      this.error2 = error;
-
-      if (error === false) {
-        this.setAngleError("angle_2", value);
-      }
+      this.setAngleError("angle_2", newData);
     },
 
     angle_3(newData) {
-      let [error, value] = this.validateValue(newData); 
-      this.error3 = error;
-
-      if (error === false) {
-        this.setAngleError("angle_3", value);
-      }
+      this.setAngleError("angle_3", newData);
     },
 
     angleError(newAngleError) {
@@ -117,15 +86,9 @@ export default {
       this.angle_1 = angle_1;
       this.angle_2 = angle_2;
       this.angle_3 = angle_3;
-    },
-
-    validateValue(value) {
-      let parsed = parseFloat(value);
-
-      return [isNaN(parsed), parsed];
     }
   }
-}
+};
 </script>
 
 <style scoped>
