@@ -1,6 +1,10 @@
 <template>
   <ul class="list-group list-group-flush broker-history">
-    <li class="list-group-item" v-for="(item, i) in history" :key="i">
+    <li
+      class="list-group-item"
+      v-for="(item, i) in history"
+      :key="i"
+    >
       <div>{{item.topic}}</div>
       <div>{{item.command}}</div>
     </li>
