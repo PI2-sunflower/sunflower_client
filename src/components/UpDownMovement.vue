@@ -1,107 +1,121 @@
 <template>
   <div class="DownMovement row">
-    <div class="col col-4">
+    <div class="col col-3">
       <div
-        class="btn btn-outline-primary"
+        :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
         @click="activeArm"
       >
         <font-awesome-icon icon="level-up-alt" />
         &nbsp;
         <span>Levantar</span>
       </div>
-    </div><!-- /.col-4 -->
+    </div><!-- /.col-3 -->
 
-    <div class="col col-4">
+    <div class="col col-3">
       <div
-        class="btn btn-outline-primary"
+        :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
         @click="deactiveArm"
       >
         <font-awesome-icon icon="level-down-alt" />
         &nbsp;
         <span>Abaixar</span>
       </div>
-    </div><!-- /.col-4 -->
+    </div><!-- /.col-3 -->
 
-    <div class="col col-4">
+    <div class="col col-3">
       <div
-        class="btn btn-outline-primary"
+        :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
         @click="stopArm"
       >
         <font-awesome-icon icon="stop-circle" />
         &nbsp;
         <span>Parar</span>
       </div>
-    </div><!-- /.col-4 -->
+    </div><!-- /.col-3 -->
 
-    <div class="col col-4">
+    <div class="col col-3">
       <div
-        class="btn btn-outline-primary"
+        :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
         @click="expandArm"
       >
-        <font-awesome-icon icon="stop-circle" />
+        <font-awesome-icon icon="angle-double-up" />
         &nbsp;
         <span>Expandir</span>
       </div>
-    </div><!-- /.col-4 -->
+    </div><!-- /.col-3 -->
 
-    <div class="col col-4">
+    <div class="col col-3">
       <div
-        class="btn btn-outline-primary"
+        :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
         @click="retractArm"
       >
-        <font-awesome-icon icon="stop-circle" />
+        <font-awesome-icon icon="angle-double-down" />
         &nbsp;
         <span>Retrair</span>
       </div>
-    </div><!-- /.col-4 -->
+    </div><!-- /.col-3 -->
 
-    <div class="col col-4">
+    <div class="col col-3">
       <div
-        class="btn btn-outline-primary"
+        :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
         @click="unlockArm"
       >
-        <font-awesome-icon icon="stop-circle" />
+        <font-awesome-icon icon="unlock-alt" />
         &nbsp;
         <span>Liberar braço</span>
       </div>
-    </div><!-- /.col-4 -->
+    </div><!-- /.col-3 -->
 
-    <div class="col col-4">
+    <div class="col col-3">
       <div
-        class="btn btn-outline-primary"
+        :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
         @click="goHomeArm"
       >
-        <font-awesome-icon icon="stop-circle" />
+        <font-awesome-icon icon="anchor" />
         &nbsp;
         <span>Posição inicial</span>
       </div>
-    </div><!-- /.col-4 -->
+    </div><!-- /.col-3 -->
   </div><!-- /.row -->
 </template>
 
 <script>
+import { mapState } from "vuex";
 import axios from "../services/axios-setup";
 
 export default {
   name: "UpDownMovement",
 
+  data() {
+    return {
+      sendingCommand: false
+    };
+  },
+
+  computed: {
+    ...mapState(["arm"]),
+
+    okToDispatch() {
+      return !this.sendingCommand && this.arm.status === "alive";
+    }
+  },
+
   methods: {
     async sendMqtt(action) {
-      this.$store.dispatch("setArmLoading", true);
+      if (!this.okToDispatch) {
+        return;
+      }
+
+      this.sendingCommand = true;
 
       try {
-        this.$store.dispatch("setArmLoading", false);
-
-        let { data } = await axios.post("/mqtt-dispatch", { ...action });
-
-        //let command = `Topic=${topic}; Code=${code}`;
-        //this.$store.dispatch("addControlCommand", command);
-
-        this.$store.dispatch("setArmReady", !!data.dispatch);
+        await axios.post("/mqtt-dispatch", { ...action });
       } catch (e) {
         console.log(e);
-        this.loadingArm = false;
-        this.$store.dispatch("setArmReady", false);
+      } finally {
+        window.setTimeout(() => {
+          this.sendingCommand = false;
+        }, 3000);
       }
     },
 
@@ -150,5 +164,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.DownMovement .col {
+  margin-bottom: 15px;
+}
 </style>

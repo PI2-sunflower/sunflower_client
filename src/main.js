@@ -15,7 +15,11 @@ import {
   faSpinner,
   faLevelUpAlt,
   faLevelDownAlt,
-  faStopCircle
+  faStopCircle,
+  faAngleDoubleUp,
+  faAngleDoubleDown,
+  faUnlockAlt,
+  faAnchor
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -28,7 +32,11 @@ library.add(
   faSpinner,
   faLevelUpAlt,
   faLevelDownAlt,
-  faStopCircle
+  faStopCircle,
+  faAngleDoubleUp,
+  faAngleDoubleDown,
+  faUnlockAlt,
+  faAnchor
 );
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
