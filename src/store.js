@@ -20,8 +20,7 @@ export default new Vuex.Store({
     },
 
     arm: {
-      ready: false,
-      loading: false
+      status: "dead"
     },
 
     positions: {
@@ -43,12 +42,8 @@ export default new Vuex.Store({
       state.control.history.push(command);
     },
 
-    setArmReady(state, isReady) {
-      state.arm.ready = isReady;
-    },
-
-    setArmLoading(state, loading) {
-      state.arm.loading = !!loading;
+    setArmStatus(state, status) {
+      state.arm.status = status;
     },
 
     setPositions(state, positions) {
@@ -69,12 +64,8 @@ export default new Vuex.Store({
       context.commit("addControlCommand", command);
     },
 
-    setArmReady(context, isReady) {
-      context.commit("setArmReady", isReady);
-    },
-
-    setArmLoading(context, loading) {
-      context.commit("setArmLoading", loading);
+    setArmStatus(context, status) {
+      context.commit("setArmStatus", status);
     },
 
     setPositions(context, positions) {
