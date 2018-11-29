@@ -41,15 +41,23 @@ export default {
 
   data() {
     return {
-      currentOp: "b",
+      currentOp: "a",
       angleError: {
         angle_1: 0.0,
         angle_2: 0.0,
-        angle_3: 0.0
+        angle_3: 0.0,
+        magnetometer: 0.0,
+        engine_speed: 0
       },
       error: false,
       message: "",
-      names: ["Azimutal", "Elevação", "Parabólica"]
+      names: [
+        "Azimutal",
+        "Elevação",
+        "Parabólica",
+        "Magnetômetro",
+        "Velocidade do motor"
+      ]
     };
   },
 
@@ -64,11 +72,13 @@ export default {
       let angleError = {
         angle_1: data.error_angle_1,
         angle_2: data.error_angle_2,
-        angle_3: data.error_angle_3
+        angle_3: data.error_angle_3,
+        magnetometer: data.magnetometer,
+        engine_speed: data.engine_speed
       };
 
-      this.currentOp = data.operation;
       this.angleError = angleError;
+      this.currentOp = data.operation;
     } catch (e) {
       this.error = true;
       this.message = "Não pode obter dados do braço";
@@ -91,7 +101,16 @@ export default {
       const angles = Object.keys(this.angleError);
 
       for (let i = 0; i < angles.length; ++i) {
-        let value = parseFloat(this.angleError[angles[i]]);
+        let value = NaN;
+
+        if (i < 4) {
+          value = parseFloat(this.angleError[angles[i]]);
+        } else {
+          // engine_speed
+          value = parseInt(this.angleError[angles[i]]);
+
+          if (value < 0 || value > 1000) value = NaN;
+        }
 
         if (isNaN(value)) {
           return "Valor inválido em " + this.names[i];
@@ -112,7 +131,9 @@ export default {
       try {
         let postData = {
           operation: this.currentOp,
-          angles: this.angleError
+          angles: this.angleError,
+          magnetometer: this.angleError.magnetometer,
+          engine_speed: parseInt(this.angleError.engine_speed)
         };
 
         let { status, data } = await axios.post("/set-arm-data", {

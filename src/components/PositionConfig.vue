@@ -4,41 +4,60 @@
     <div class="position-form">
       <div class="form-group">
         <label for="lat">Latitude</label>
-        <input type="text" class="form-control" id="lat" v-model="latitude">
+        <input
+          type="text"
+          class="form-control"
+          id="lat"
+          v-model="latitude"
+        >
       </div>
 
       <div class="form-group">
         <label for="long">Longitude</label>
-        <input type="text" class="form-control" id="long" v-model="longitude">
+        <input
+          type="text"
+          class="form-control"
+          id="long"
+          v-model="longitude"
+        >
       </div>
 
       <div class="form-group">
         <label for="alt">Altitude</label>
-        <input type="text" class="form-control" id="alt" v-model="altitude">
-      </div>
-
-      <div class="form-group">
-        <label for="mag">Magnetômetro</label>
-        <input type="text" class="form-control" id="mag" v-model="magnetometer">
-      </div>
-
-      <div class="form-group">
-        <label for="engine">Velocidade do motor</label>
-        <input type="text" class="form-control" id="engine" v-model="engine_speed">
+        <input
+          type="text"
+          class="form-control"
+          id="alt"
+          v-model="altitude"
+        >
       </div>
     </div>
 
-    <div :class="error ? 'message-err' : 'message-ok'" v-if="message !== ''">
+    <div
+      :class="error ? 'message-err' : 'message-ok'"
+      v-if="message !== ''"
+    >
       <small>{{message}}</small>
     </div>
 
     <br />
-    <button class="btn btn-outline-primary" @click="getFromNavigator">
+    <button
+      class="btn btn-outline-primary"
+      @click="getFromNavigator"
+    >
       Obter pelo navegador
     </button>
     &nbsp;
-    <button class="btn btn-primary" @click="updatePosition" :disabled="sendingData">Atualizar Posição</button>
-    <font-awesome-icon icon="spinner" class="it-is-spinning spin-big" v-if="sendingData" />
+    <button
+      class="btn btn-primary"
+      @click="updatePosition"
+      :disabled="sendingData"
+    >Atualizar Posição</button>
+    <font-awesome-icon
+      icon="spinner"
+      class="it-is-spinning spin-big"
+      v-if="sendingData"
+    />
   </fieldset>
 </template>
 
@@ -55,8 +74,6 @@ export default {
       latitude: 0,
       longitude: 0,
       altitude: 0,
-      magnetometer: 0,
-      engine_speed: 0,
 
       sendingData: false,
       message: "",
@@ -77,12 +94,11 @@ export default {
   methods: {
     getFromNavigator() {
       navigator.geolocation.getCurrentPosition(position => {
-        let { latitude, longitude, altitude, engine_speed } = position.coords;
+        let { latitude, longitude, altitude } = position.coords;
 
         if (latitude !== null) this.latitude = latitude;
         if (longitude !== null) this.longitude = longitude;
         if (altitude !== null) this.altitude = altitude;
-        if (engine_speed !== null) this.engine_speed = engine_speed;
       });
     },
 
@@ -91,33 +107,27 @@ export default {
         return;
       }
 
-      const {
-        latitude,
-        longitude,
-        altitude,
-        magnetometer,
-        engine_speed
-      } = this;
+      const { latitude, longitude, altitude } = this;
       this.sendingData = true;
 
       try {
-        await axios.post("/set-arm-position", {
+        let { data } = await axios.post("/set-arm-position", {
           latitude,
           longitude,
-          altitude,
-          magnetometer,
-          engine_speed
+          altitude
         });
 
-        this.error = false;
-        this.message = "Posição atualizada com sucesso";
-        this.updateLocalState({
-          latitude,
-          longitude,
-          altitude,
-          magnetometer,
-          engine_speed
-        });
+        if (data.updated === true) {
+          this.error = false;
+          this.message = "Posição atualizada com sucesso";
+          this.updateLocalState({
+            latitude,
+            longitude,
+            altitude
+          });
+        } else {
+          this.setErrorMessage("Não foi possível atualizar a posição");
+        }
       } catch (e) {
         this.setErrorMessage("Não foi possível atualizar a posição");
         console.log(e);
@@ -127,13 +137,11 @@ export default {
     },
 
     validateData() {
-      let { latitude, longitude, altitude, magnetometer, engine_speed } = this;
+      let { latitude, longitude, altitude } = this;
 
       latitude = parseFloat(latitude);
       longitude = parseFloat(longitude);
       altitude = parseFloat(altitude);
-      magnetometer = parseFloat(magnetometer);
-      engine_speed = parseInt(engine_speed);
 
       const invalidField = field => `${field} é um número inválido.`;
 
@@ -152,16 +160,6 @@ export default {
         return false;
       } else this.altitude = altitude;
 
-      if (isNaN(magnetometer)) {
-        this.setErrorMessage(invalidField("Magnetômetro"));
-        return false;
-      } else this.magnetometer = magnetometer;
-
-      if (isNaN(engine_speed) || (engine_speed < 0 || engine_speed > 1000)) {
-        this.setErrorMessage("Velocidade do motor deve estar entre 0 a 1000");
-        return false;
-      } else this.engine_speed = engine_speed;
-
       return true;
     },
 
@@ -170,25 +168,15 @@ export default {
       this.message = message;
     },
 
-    updateLocalState({
-      latitude,
-      longitude,
-      altitude,
-      magnetometer,
-      engine_speed
-    }) {
+    updateLocalState({ latitude, longitude, altitude }) {
       this.latitude = latitude;
       this.altitude = altitude;
       this.longitude = longitude;
-      this.magnetometer = magnetometer;
-      this.engine_speed = engine_speed;
 
       this.$store.dispatch("setPositions", {
         latitude,
         longitude,
-        altitude,
-        magnetometer,
-        engine_speed
+        altitude
       });
     }
   }
