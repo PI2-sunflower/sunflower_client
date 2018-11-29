@@ -1,74 +1,84 @@
 <template>
-  <div
-    id="main-container"
-    class="container"
-  >
-    <div class="row">
-      <nav class="col col-10">
-        <ul class="nav nav-pills">
-          <li class="nav-item">
-            <span class="navbar-brand disabled">
-              Modo
-            </span>
-          </li>
+  <div>
+    <div
+      v-if="screenLocked === true"
+      class="my-card-wrapper"
+    >
+      <UnlockCard :unlockScreen="unlockScreen" />
+    </div>
 
-          <li class="nav-item">
-            <router-link
-              active-class="active"
-              to="/tracker"
-              class="nav-link"
-            >
-              <font-awesome-icon icon="globe-americas" />
-              Rastreador
-            </router-link>
-          </li>
-
-          <li class="nav-item">
-            <router-link
-              active-class="active"
-              to="/control"
-              class="nav-link"
-            >
-              <font-awesome-icon icon="gamepad" />
-              Controle direto
-            </router-link>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link">
-              <font-awesome-icon
-                icon="broadcast-tower"
-                :class="'arm-' + arm.status"
-              />
-              Antena
-              &nbsp;
-              <span
-                class="position-error"
-                v-if="positions.error"
-              >
-                Não pode obter a posição do braço
+    <div
+      id="main-container"
+      class="container"
+      v-if="screenLocked === false"
+    >
+      <div class="row">
+        <nav class="col col-10">
+          <ul class="nav nav-pills">
+            <li class="nav-item">
+              <span class="navbar-brand disabled">
+                Modo
               </span>
-            </a>
+            </li>
 
-          </li>
-        </ul>
-      </nav>
+            <li class="nav-item">
+              <router-link
+                active-class="active"
+                to="/tracker"
+                class="nav-link"
+              >
+                <font-awesome-icon icon="globe-americas" />
+                Rastreador
+              </router-link>
+            </li>
 
-      <div class="col col-2">
-        <router-link
-          to="/config"
-          active-class="active"
-          class="btn btn-outline-primary"
-        >
-          <font-awesome-icon icon="cog" />
-          Configurações
-        </router-link>
-      </div>
-    </div><!-- /row -->
+            <li class="nav-item">
+              <router-link
+                active-class="active"
+                to="/control"
+                class="nav-link"
+              >
+                <font-awesome-icon icon="gamepad" />
+                Controle direto
+              </router-link>
+            </li>
 
-    <hr />
+            <li class="nav-item">
+              <a class="nav-link">
+                <font-awesome-icon
+                  icon="broadcast-tower"
+                  :class="'arm-' + arm.status"
+                />
+                Braço: {{armStatusText}}
+                &nbsp;
+                <span
+                  class="position-error"
+                  v-if="positions.error"
+                >
+                  Não pode obter a posição do braço
+                </span>
+              </a>
 
-    <router-view />
+            </li>
+          </ul>
+        </nav>
+
+        <div class="col col-2">
+          <router-link
+            to="/config"
+            active-class="active"
+            class="btn btn-outline-primary"
+          >
+            <font-awesome-icon icon="cog" />
+            Configurações
+          </router-link>
+        </div>
+      </div><!-- /row -->
+
+      <hr />
+
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -78,17 +88,38 @@ import { mapState } from "vuex";
 import axios from "./services/axios-setup";
 import fetchPosition from "./services/fetch-position";
 
+import UnlockCard from "./components/UnlockCard";
+
 export default {
   name: "App",
 
+  components: {
+    UnlockCard
+  },
+
   data() {
     return {
-      keepChecking: true
+      keepChecking: true,
+      screenLocked: true
     };
   },
 
   computed: {
-    ...mapState(["arm", "positions"])
+    ...mapState(["arm", "positions"]),
+
+    armStatusText() {
+      switch (this.arm.status) {
+        case "dead":
+          return "sem resposta";
+        case "alive":
+          return "ocioso";
+        case "busy":
+          return "ocupado";
+
+        default:
+          return `status desconhecido: {this.arm.status}`;
+      }
+    }
   },
 
   mounted() {
@@ -97,6 +128,10 @@ export default {
   },
 
   methods: {
+    unlockScreen() {
+      this.screenLocked = false;
+    },
+
     async getArmPosition() {
       let { error, data } = await fetchPosition();
 
@@ -132,6 +167,16 @@ export default {
 
 
 <style scoped>
+.my-card-wrapper {
+  position: absolute;
+  display: flex;
+  background-color: #d4d4d4;
+  height: 99vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
 .arm-dead {
   color: rgb(220, 53, 69);
 }
