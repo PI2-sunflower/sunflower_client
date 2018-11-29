@@ -1,6 +1,6 @@
 <template>
   <div
-    class="card my-card"
+    class="card"
     style="width: 18rem;"
   >
     <div class="card-body">

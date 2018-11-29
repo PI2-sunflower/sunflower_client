@@ -14,8 +14,11 @@
       />
     </div>
 
-    <div class="col col-12 message-err">
-      <small>{{errorMessage}}</small>
+    <div
+      :class="'col col-12 ' + (error ? 'message-err' : 'message-ok')"
+      v-if="message !== ''"
+    >
+      <small>{{message}}</small>
     </div>
 
     <div class="col col-12">
@@ -44,7 +47,8 @@ export default {
         angle_2: 0.0,
         angle_3: 0.0
       },
-      errorMessage: "",
+      error: false,
+      message: "",
       names: ["Azimutal", "Elevação", "Parabólica"]
     };
   },
@@ -66,7 +70,8 @@ export default {
       this.currentOp = data.operation;
       this.angleError = angleError;
     } catch (e) {
-      console.log("Nao pode obter arm data");
+      this.error = true;
+      this.message = "Não pode obter dados do braço";
       console.log(e);
     }
   },
@@ -97,9 +102,10 @@ export default {
     },
 
     async dispatchUpdate() {
-      this.errorMessage = this.validateAngles();
+      this.message = this.validateAngles();
 
-      if (this.errorMessage.length > 0) {
+      if (this.message.length > 0) {
+        this.error = true;
         return;
       }
 
@@ -114,7 +120,17 @@ export default {
         });
         console.log(status);
         console.log(data);
+
+        if (data.updated) {
+          this.message = "Dados atualizados com sucesso";
+          this.error = false;
+        } else {
+          this.message = "Falha na atualização";
+          this.error = true;
+        }
       } catch (e) {
+        this.message = "Não pode enviar os dados";
+        this.error = true;
         console.log(e);
       }
     }
@@ -126,5 +142,9 @@ export default {
 .message-err {
   margin-bottom: 15px;
   color: rgb(200, 35, 51);
+}
+.message-ok {
+  margin-bottom: 15px;
+  color: rgb(40, 167, 69);
 }
 </style>

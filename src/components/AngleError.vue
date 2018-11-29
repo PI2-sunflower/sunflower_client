@@ -6,7 +6,7 @@
       <label for="err_angle_1">Azimutal</label>
 
       <input
-        type="number"
+        type="text"
         class="form-control"
         id="err_angle_1"
         placeholder="0.0"
@@ -18,7 +18,7 @@
       <label for="err_angle_2">Elevação</label>
 
       <input
-        type="number"
+        type="text"
         class="form-control"
         id="err_angle_2"
         placeholder="0.0"
@@ -30,7 +30,7 @@
       <label for="err_angle_3">Parabólica</label>
 
       <input
-        type="number"
+        type="text"
         class="form-control"
         id="err_angle_3"
         placeholder="0.0"
