@@ -58,22 +58,11 @@
     <div class="col col-3">
       <div
         :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
-        @click="unlockArm"
-      >
-        <font-awesome-icon icon="unlock-alt" />
-        &nbsp;
-        <span>Liberar braço</span>
-      </div>
-    </div><!-- /.col-3 -->
-
-    <div class="col col-3">
-      <div
-        :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
-        @click="goHomeArm"
+        @click="resetAxisArm"
       >
         <font-awesome-icon icon="anchor" />
         &nbsp;
-        <span>Posição inicial</span>
+        <span>Resetar eixos</span>
       </div>
     </div><!-- /.col-3 -->
   </div><!-- /.row -->
@@ -149,15 +138,9 @@ export default {
       });
     },
 
-    unlockArm() {
+    resetAxisArm() {
       this.sendMqtt({
-        command: "unlock"
-      });
-    },
-
-    goHomeArm() {
-      this.sendMqtt({
-        command: "go_home"
+        command: "reset_axis"
       });
     }
   }
