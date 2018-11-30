@@ -7,7 +7,7 @@ const getBaseUrl = () =>
 
 const instance = axios.create({
   baseURL: `${getBaseUrl()}/api/`,
-  timeout: 1000
+  timeout: 3000
 });
 
 export default instance;
