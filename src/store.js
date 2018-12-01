@@ -28,6 +28,16 @@ export default new Vuex.Store({
       longitude: 0,
       altitude: 0,
       error: false
+    },
+
+    armData: {
+      operation: "a",
+      error_angle_1: 0,
+      error_angle_2: 0,
+      error_angle_3: 0,
+      magnetometer: 0,
+      engine_speed: 0,
+      error: false
     }
   },
 
@@ -50,6 +60,14 @@ export default new Vuex.Store({
 
     setPositionsError(state, errorState) {
       state.positions.error = errorState;
+    },
+
+    setArmData(state, data) {
+      state.armData = { ...data, error: false };
+    },
+
+    setArmDataError(state, error) {
+      state.armData.error = error;
     }
   },
 
@@ -72,6 +90,14 @@ export default new Vuex.Store({
 
     setPositionsError(context, errorState) {
       context.commit("setPositionsError", !!errorState);
+    },
+
+    setArmData(context, data) {
+      context.commit("setArmData", data);
+    },
+
+    setArmDataError(context, error) {
+      context.commit("setArmDataError", !!error);
     }
   }
 });

@@ -125,6 +125,7 @@ export default {
   mounted() {
     this.checkArmStatus();
     this.getArmPosition();
+    this.getArmData();
   },
 
   methods: {
@@ -139,6 +140,16 @@ export default {
         this.updateLocalState(data);
       } else {
         this.$store.dispatch("setPositionsError", true);
+      }
+    },
+
+    async getArmData() {
+      try {
+        let { data } = await axios.get("/get-arm-data");
+        this.$store.dispatch("setArmData", data);
+      } catch (e) {
+        this.$store.dispatch("setArmDataError", true);
+        console.log(e);
       }
     },
 
