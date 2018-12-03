@@ -4,7 +4,7 @@
       <div class="col col-6">
         <div id="tracker-form">
           <div class="form-group">
-            <label for="satNORD">Código NORD</label>
+            <label for="satNORD">Código NORAD</label>
             <input
               type="text"
               class="form-control"
@@ -17,7 +17,7 @@
               id="satNORDHelp"
               class="form-text text-muted"
             >
-              Não sabe o código NORD ?
+              Não sabe o código NORAD ?
               <a
                 href="https://www.n2yo.com/database/"
                 target="BLANK"

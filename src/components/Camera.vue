@@ -1,7 +1,7 @@
 <template>
   <div class="cam-container">
     <img
-      src="../assets/logo.png"
+      :src="defaultImg"
       class="cam-logo"
       v-if="image == null"
     />
@@ -18,6 +18,8 @@
 
 <script>
 import { mapState } from "vuex";
+
+const defImg = require("../assets/logo.png");
 
 import axios from "../services/axios-setup";
 
@@ -48,7 +50,11 @@ export default {
   },
 
   computed: {
-    ...mapState(["positions", "armData"])
+    ...mapState(["positions", "armData"]),
+
+    defaultImg() {
+      return defImg;
+    }
   },
 
   methods: {
