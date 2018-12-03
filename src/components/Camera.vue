@@ -3,13 +3,14 @@
     <img
       src="../assets/logo.png"
       class="cam-logo"
-      v-if="image === null"
+      v-if="image == null"
     />
 
     <img
-      :src="imgUrl"
+      id="sat-track-image"
+      :src="imgWithErrorUrl()"
       class="cam-logo-plot"
-      v-if="image !== null"
+      v-if="image != null"
     />
   </div>
 </template>
@@ -47,9 +48,26 @@ export default {
   },
 
   computed: {
-    ...mapState(["positions", "armData"]),
+    ...mapState(["positions", "armData"])
+  },
 
-    imgWithError() {
+  methods: {
+    async fetchImage() {
+      try {
+        const URL = this.imgWithErrorUrl();
+
+        let { data } = await axios.get(URL, {
+          timeout: 8000
+        });
+
+        this.image = data;
+      } catch (e) {
+        console.log(e);
+        this.image = null;
+      }
+    },
+
+    imgWithErrorUrl() {
       const BASE_URL = "http://localhost:8000/plotter/plot_az_el_offsets";
       const { latitude, longitude, altitude } = this.positions;
       const { error_angle_1, error_angle_2, magnetometer } = this.armData;
@@ -75,54 +93,6 @@ export default {
       return BASE_URL + url;
     },
 
-    imgUrl() {
-      const { latitude, longitude, altitude } = this.positions;
-      const { year, month, day, hours, minutes, seconds } = this.getDate();
-
-      const BASE_URL = "http://localhost:8000/plotter/plot_azimuth_elevation";
-
-      const PLOTTER =
-        "/" +
-        this.NORD +
-        "/" +
-        latitude +
-        "/" +
-        longitude +
-        "/" +
-        altitude +
-        "/" +
-        year +
-        "/" +
-        month +
-        "/" +
-        day +
-        "/" +
-        hours +
-        "/" +
-        minutes +
-        "/" +
-        seconds +
-        "/" +
-        "500/5";
-
-      return BASE_URL + PLOTTER;
-    }
-  },
-
-  methods: {
-    async fetchImage() {
-      try {
-        let { data } = await axios.get(this.imgWithError, {
-          timeout: 8000
-        });
-
-        this.image = data;
-      } catch (e) {
-        console.log(e);
-        this.image = null;
-      }
-    },
-
     withTwoDigits(value) {
       return ("0" + value.toString()).slice(-2);
     },
@@ -131,12 +101,12 @@ export default {
       const date = new Date(new Date().toUTCString());
 
       return {
-        year: date.getFullYear(),
-        month: this.withTwoDigits(date.getMonth() + 1),
-        day: this.withTwoDigits(date.getDate()),
-        hours: this.withTwoDigits(date.getHours()),
-        minutes: this.withTwoDigits(date.getMinutes()),
-        seconds: this.withTwoDigits(date.getSeconds())
+        year: date.getUTCFullYear(),
+        month: this.withTwoDigits(date.getUTCMonth() + 1),
+        day: this.withTwoDigits(date.getUTCDate()),
+        hours: this.withTwoDigits(date.getUTCHours()),
+        minutes: this.withTwoDigits(date.getUTCMinutes()),
+        seconds: this.withTwoDigits(date.getUTCSeconds())
       };
     }
   }

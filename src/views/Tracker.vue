@@ -5,44 +5,92 @@
         <div id="tracker-form">
           <div class="form-group">
             <label for="satNORD">Código NORD</label>
-            <input type="text" class="form-control" id="satNORD" aria-describedby="satNORD" placeholder="000000" v-model="NORD">
-            <small id="satNORDHelp" class="form-text text-muted">
+            <input
+              type="text"
+              class="form-control"
+              id="satNORD"
+              aria-describedby="satNORD"
+              placeholder="000000"
+              v-model="NORD"
+            >
+            <small
+              id="satNORDHelp"
+              class="form-text text-muted"
+            >
               Não sabe o código NORD ?
-              <a href="https://www.n2yo.com/database/" target="BLANK">Clique aqui</a>
+              <a
+                href="https://www.n2yo.com/database/"
+                target="BLANK"
+              >Clique aqui</a>
             </small>
           </div><!-- /form-group -->
 
-          <button v-if="isTracking === false" class="btn btn-primary" @click="setTracking(true)">Rastrear</button>
+          <button
+            v-if="isTracking === false"
+            class="btn btn-primary"
+            @click="setTracking(true)"
+          >Rastrear</button>
 
-          <button v-if="isTracking === true" :class="'btn btn-' + (current.satname ? 'danger' : 'warning')" @click="setTracking(false)">Parar rastreamento</button>
+          <button
+            v-if="isTracking === true"
+            :class="'btn btn-' + (current.satname ? 'danger' : 'warning')"
+            @click="setTracking(false)"
+          >Parar rastreamento</button>
 
-          <font-awesome-icon icon="spinner" class="it-is-spinning spin-big" v-if="isTracking && !current.satname" />
+          <font-awesome-icon
+            icon="spinner"
+            class="it-is-spinning spin-big"
+            v-if="isTracking && !current.satname"
+          />
         </div><!-- /#tracker-form -->
       </div><!-- /col-6 -->
 
       <div class="col col-6">
         <ul class="nav nav-tabs tracker-tabs">
           <li class="nav-item">
-            <a :class="'nav-link ' + (tab === 'satposition' ? 'active' : '')" @click="setTab('satposition')">Posição atual</a>
+            <a
+              :class="'nav-link ' + (tab === 'satposition' ? 'active' : '')"
+              @click="setTab('satposition')"
+            >Posição atual</a>
           </li>
 
           <li class="nav-item">
-            <a :class="'nav-link ' + (tab === 'broker' ? 'active' : '')" @click="setTab('broker')">Histórico de comandos</a>
+            <a
+              :class="'nav-link ' + (tab === 'broker' ? 'active' : '')"
+              @click="setTab('broker')"
+            >Histórico de comandos</a>
           </li>
         </ul>
 
-        <SatCurPosition v-if="tab === 'satposition'" :satname="current.satname" :satlatitude="current.satlatitude" :satlongitude="current.satlongitude" />
-        <BrokerHistory v-if="tab === 'broker'" class="Tracker-BrokerHistory" />
+        <SatCurPosition
+          v-if="tab === 'satposition'"
+          :satname="current.satname"
+          :satlatitude="current.satlatitude"
+          :satlongitude="current.satlongitude"
+        />
+        <BrokerHistory
+          v-if="tab === 'broker'"
+          class="Tracker-BrokerHistory"
+        />
       </div><!-- /col-6 -->
     </div><!-- /row -->
 
     <div class="row">
       <div class="col col-6">
-        <Camera v-if="!isTracking" />
-        <Camera v-if="isTracking" :NORD="NORD" />
+        <Camera
+          v-if="!isTracking"
+          NORD=""
+        />
+        <Camera
+          v-if="isTracking"
+          :NORD="NORD"
+        />
       </div><!-- /col-6 -->
 
-      <div id="map-container" class="col col-6">
+      <div
+        id="map-container"
+        class="col col-6"
+      >
         <div id="map-tracker"></div>
       </div><!-- /col-6 -->
     </div><!-- /row -->
