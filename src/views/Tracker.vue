@@ -125,25 +125,28 @@ export default {
   data() {
     return {
       tab: "satposition",
-      NORD: "32293",
+      NORD: "",
       isTracking: false,
       current: {}
     };
   },
 
   computed: {
-    ...mapState(["track"])
+    ...mapState(["currentNord", "track"])
   },
 
   watch: {
-    NORD() {
+    NORD(newNord) {
       if (this.isTracking) {
         this.setTracking(false);
       }
+
+      this.$store.dispatch("setCurrentNord", newNord);
     }
   },
 
   mounted() {
+    this.NORD = this.currentNord;
     this.initMap();
   },
 

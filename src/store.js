@@ -8,6 +8,8 @@ export default new Vuex.Store({
   strict: true,
 
   state: {
+    currentNord: "26620", // SAC C
+
     track: {
       from: null,
       to: null,
@@ -42,6 +44,10 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    setCurrentNord(state, newNord) {
+      state.currentNord = newNord;
+    },
+
     setTrackData(state, track) {
       state.track = track;
     },
@@ -72,6 +78,10 @@ export default new Vuex.Store({
   },
 
   actions: {
+    setCurrentNord(context, newNord) {
+      context.commit("setCurrentNord", newNord);
+    },
+
     setTrackData(context, track) {
       context.commit("setTrackData", track);
     },
