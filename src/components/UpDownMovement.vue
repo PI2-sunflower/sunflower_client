@@ -25,17 +25,6 @@
     <div class="col col-3">
       <div
         :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
-        @click="stopArm"
-      >
-        <font-awesome-icon icon="stop-circle" />
-        &nbsp;
-        <span>Parar</span>
-      </div>
-    </div><!-- /.col-3 -->
-
-    <div class="col col-3">
-      <div
-        :class="'btn btn-outline-primary btn-sm ' + (okToDispatch === false ? 'disabled' : '')"
         @click="expandArm"
       >
         <font-awesome-icon icon="angle-double-up" />
@@ -117,12 +106,6 @@ export default {
     deactiveArm() {
       this.sendMqtt({
         command: "go_down"
-      });
-    },
-
-    stopArm() {
-      this.sendMqtt({
-        command: "stop_up_down"
       });
     },
 
