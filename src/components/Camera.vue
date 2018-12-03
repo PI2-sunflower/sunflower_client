@@ -60,7 +60,9 @@ export default {
           timeout: 8000
         });
 
-        this.image = data;
+        window.setTimeout(() => {
+          this.image = data;
+        }, 1500);
       } catch (e) {
         console.log(e);
         this.image = null;
