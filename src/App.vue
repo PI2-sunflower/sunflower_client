@@ -215,24 +215,8 @@ export default {
   color: rgb(220, 53, 69);
 }
 
-.it-is-spinning {
-  margin-left: 10px;
-  color: rgb(255, 193, 7);
-  animation: full-roll 2s infinite linear;
-  animation-direction: normal;
-}
-
 .antenna-actions a {
   cursor: pointer;
-}
-
-@keyframes full-roll {
-  0% {
-    transform: rotate(0);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 .position-error {

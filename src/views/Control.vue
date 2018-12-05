@@ -5,11 +5,24 @@
         <div class="col col-12">
           <ul class="nav nav-tabs">
             <li class="nav-item">
-              <a :class="'controlTab nav-link ' + (controlTab == 'b' ? 'active' : '')" @click="setTab('b')">Braço</a>
+              <a
+                :class="'controlTab nav-link ' + (controlTab == 'b' ? 'active' : '')"
+                @click="setTab('b')"
+              >Braço</a>
             </li>
 
             <li class="nav-item">
-              <a :class="'controlTab nav-link ' + (controlTab == 'a' ? 'active' : '')" @click="setTab('a')">Eixos</a>
+              <a
+                :class="'controlTab nav-link ' + (controlTab == 'a' ? 'active' : '')"
+                @click="setTab('a')"
+              >Eixos</a>
+            </li>
+
+            <li class="nav-item">
+              <a
+                :class="'controlTab nav-link ' + (controlTab == 'c' ? 'active' : '')"
+                @click="setTab('c')"
+              >Timer</a>
             </li>
           </ul>
 
@@ -17,6 +30,7 @@
 
           <UpDownMovement v-if="controlTab == 'b'" />
           <AngleControl v-if="controlTab == 'a'" />
+          <AngleTimer v-if="controlTab == 'c'" />
         </div><!-- /col-12 -->
       </div><!-- /row -->
     </div>
@@ -33,6 +47,7 @@ import { mapState } from "vuex";
 import UpDownMovement from "../components/UpDownMovement";
 import AngleControl from "../components/AngleControl";
 import BrokerHistory from "../components/BrokerHistory";
+import AngleTimer from "../components/AngleTimer";
 
 export default {
   name: "Control",
@@ -40,7 +55,8 @@ export default {
   components: {
     UpDownMovement,
     AngleControl,
-    BrokerHistory
+    BrokerHistory,
+    AngleTimer
   },
 
   data() {

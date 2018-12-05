@@ -1,6 +1,10 @@
 <template>
   <div class="angle-control row">
-    <div class="col col-12 row axis" v-for="angle in angles" :key="angle.index">
+    <div
+      class="col col-12 row axis"
+      v-for="angle in angles"
+      :key="angle.index"
+    >
       <div class="col col-12">
         <div class="form-inline">
           <div class="col col-3 angle-label">
@@ -8,7 +12,13 @@
           </div>
 
           <div class="col col-3">
-            <input :id="'angle_' + angle.index" type="number" class="form-control" placeholder="0.0" v-model="angle.value" />
+            <input
+              :id="'angle_' + angle.index"
+              type="number"
+              class="form-control"
+              placeholder="0.0"
+              v-model="angle.value"
+            />
           </div>
         </div>
       </div>
@@ -17,11 +27,18 @@
     <div class="col col-12">
       <small class="err-message">{{message}}</small>
       <hr />
-      <button :class="'btn btn-' + (sendingRequest ? 'warning': 'primary')" @click="sendDirections">
+      <button
+        :class="'btn btn-' + (sendingRequest ? 'warning': 'primary')"
+        @click="sendDirections"
+      >
         Enviar direções
       </button>
 
-      <font-awesome-icon icon="spinner" class="it-is-spinning spin-big" v-if="sendingRequest" />
+      <font-awesome-icon
+        icon="spinner"
+        class="it-is-spinning spin-big"
+        v-if="sendingRequest"
+      />
     </div>
   </div>
 </template>
@@ -145,6 +162,22 @@ export default {
   }
   100% {
     transform: rotateX(180deg);
+  }
+}
+
+.it-is-spinning {
+  margin-left: 10px;
+  color: rgb(255, 193, 7);
+  animation: full-roll 2s infinite linear;
+  animation-direction: normal;
+}
+
+@keyframes full-roll {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>

@@ -187,7 +187,24 @@ export default {
 .message-ok {
   color: rgb(40, 167, 69);
 }
+
 .message-err {
   color: rgb(200, 35, 51);
+}
+
+.it-is-spinning {
+  margin-left: 10px;
+  color: rgb(255, 193, 7);
+  animation: full-roll 2s infinite linear;
+  animation-direction: normal;
+}
+
+@keyframes full-roll {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
