@@ -35,6 +35,7 @@ export default {
 
   data() {
     return {
+      keepFetching: false,
       image: null
     };
   },
@@ -42,9 +43,11 @@ export default {
   watch: {
     NORD(newNORD) {
       if (newNORD.length > 0) {
+        this.keepFetching = true;
         this.fetchImage();
       } else {
         this.image = null;
+        this.keepFetching = false;
       }
     }
   },
@@ -57,18 +60,30 @@ export default {
     }
   },
 
+  destroyed() {
+    this.keepFetching = false;
+  },
+
   methods: {
     async fetchImage() {
       try {
         const URL = this.imgWithErrorUrl();
 
         let { data } = await axios.get(URL, {
-          timeout: 8000
+          timeout: 3000
         });
 
         window.setTimeout(() => {
           this.image = data;
-        }, 1500);
+        }, 500);
+
+        window.setTimeout(() => {
+          if (this.NORD.length > 0 && this.keepFetching) {
+            console.log("AGAIN !");
+            // this.image = null;
+            this.fetchImage();
+          }
+        }, 3000);
       } catch (e) {
         console.log(e);
         this.image = null;
@@ -95,7 +110,7 @@ export default {
         `/hour=${hours}` +
         `/minute=${minutes}` +
         `/second=${seconds}` +
-        `/count=500` +
+        `/count=100` +
         `/step=5`;
 
       return BASE_URL + url;
