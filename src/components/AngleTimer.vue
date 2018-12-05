@@ -155,7 +155,7 @@ export default {
     async deactivateTimer() {
       this.sendingRequest = true;
       try {
-        let { data } = await axios.get("/stop-timer");
+        await axios.get("/stop-timer");
         this.timerIsActive = false;
       } catch (e) {
         console.log(e);

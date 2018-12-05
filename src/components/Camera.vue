@@ -70,7 +70,7 @@ export default {
         const URL = this.imgWithErrorUrl();
 
         let { data } = await axios.get(URL, {
-          timeout: 3000
+          timeout: 15000
         });
 
         window.setTimeout(() => {
@@ -83,10 +83,11 @@ export default {
             // this.image = null;
             this.fetchImage();
           }
-        }, 3000);
+        }, 4000);
       } catch (e) {
         console.log(e);
         this.image = null;
+        console.log("Could not update image");
       }
     },
 
@@ -111,7 +112,7 @@ export default {
         `/minute=${minutes}` +
         `/second=${seconds}` +
         `/count=100` +
-        `/step=5`;
+        `/step=10`;
 
       return BASE_URL + url;
     },
