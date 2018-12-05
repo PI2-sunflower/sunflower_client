@@ -1,18 +1,20 @@
 <template>
   <div class="row">
     <div class="col col-12 conf-field">
+      <div style="text-align: center">Azimutal</div>
+      <br />
       <div class="form-inline">
         <div class="col col-3 angle-label">
-          <label for="angle_1">Azimutal</label> &nbsp;
+          <label for="start_angle">Início</label> &nbsp;
         </div>
 
         <div class="col col-3">
           <input
-            id="angle_1"
+            id="start_angle"
             type="number"
             class="form-control"
             placeholder="0.0"
-            v-model="angle_1"
+            v-model="start_angle"
           />
         </div>
       </div>
@@ -21,16 +23,16 @@
     <div class="col col-12 conf-field">
       <div class="form-inline">
         <div class="col col-3 angle-label">
-          <label for="step">Passo</label> &nbsp;
+          <label for="end_angle">Fim</label> &nbsp;
         </div>
 
         <div class="col col-3">
           <input
-            id="step"
+            id="end_angle"
             type="number"
             class="form-control"
             placeholder="0.0"
-            v-model="step"
+            v-model="end_angle"
           />
         </div>
       </div>
@@ -46,7 +48,7 @@
 
         <div class="col col-3">
           <input
-            id="step"
+            id="end_angle"
             type="number"
             class="form-control"
             placeholder="60"
@@ -85,6 +87,8 @@
 </template>
 
 <script>
+import axios from "../services/axios-setup";
+
 export default {
   name: "AngleTimer",
 
@@ -94,31 +98,70 @@ export default {
       sendingRequest: false,
       timerIsActive: false,
 
-      angle_1: 0,
-      step: 1,
+      start_angle: 0,
+      end_angle: 1,
       time: 0
     };
   },
 
-  methods: {
-    activateTimer() {
-      alert("START !");
+  mounted() {
+    this.fetchTimerIsActive();
+  },
 
-      this.sendingRequest = true;
-      window.setTimeout(() => {
-        this.timerIsActive = true;
-        this.sendingRequest = false;
-      }, 3000);
+  destroyed() {
+    this.deactivateTimer();
+  },
+
+  methods: {
+    async fetchTimerIsActive() {
+      try {
+        let { data } = await axios.get("/timer-is-active");
+        this.timerIsActive = data.is_active;
+
+        if (this.timerIsActive) {
+          window.setTimeout(() => {
+            this.fetchTimerIsActive();
+          }, 1000);
+        }
+      } catch (e) {
+        console.log(e);
+      }
     },
 
-    deactivateTimer() {
-      console.log("DIE !");
-
+    async activateTimer() {
       this.sendingRequest = true;
-      window.setTimeout(() => {
+
+      try {
+        const { start_angle, end_angle, time } = this;
+
+        const { data } = await axios.post("start-timer", {
+          start_angle,
+          end_angle,
+          time
+        });
+
+        console.log(data);
+        this.timerIsActive = true;
+
+        this.fetchTimerIsActive();
+      } catch (e) {
         this.timerIsActive = false;
+        console.log(e);
+      } finally {
         this.sendingRequest = false;
-      }, 3000);
+      }
+    },
+
+    async deactivateTimer() {
+      this.sendingRequest = true;
+      try {
+        let { data } = await axios.get("/stop-timer");
+        this.timerIsActive = false;
+      } catch (e) {
+        console.log(e);
+      } finally {
+        this.sendingRequest = false;
+      }
     }
   }
 };

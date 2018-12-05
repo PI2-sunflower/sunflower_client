@@ -22,7 +22,7 @@
               <a
                 :class="'controlTab nav-link ' + (controlTab == 'c' ? 'active' : '')"
                 @click="setTab('c')"
-              >Timer</a>
+              >Varredura</a>
             </li>
           </ul>
 
