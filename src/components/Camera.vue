@@ -77,18 +77,23 @@ export default {
           this.image = data;
         }, 500);
 
-        window.setTimeout(() => {
-          if (this.NORD.length > 0 && this.keepFetching) {
-            console.log("AGAIN !");
-            // this.image = null;
-            this.fetchImage();
-          }
-        }, 4000);
+        this.refetchImage();
       } catch (e) {
         console.log(e);
         this.image = null;
         console.log("Could not update image");
+        this.refetchImage();
       }
+    },
+
+    refetchImage() {
+      window.setTimeout(() => {
+        if (this.NORD.length > 0 && this.keepFetching) {
+          console.log("AGAIN !");
+          // this.image = null;
+          this.fetchImage();
+        }
+      }, 4000);
     },
 
     imgWithErrorUrl() {
